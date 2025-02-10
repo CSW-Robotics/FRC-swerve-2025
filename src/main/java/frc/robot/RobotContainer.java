@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,6 +28,7 @@ import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
+import swervelib.imu.AnalogGyroSwerve;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -41,6 +43,8 @@ public class RobotContainer
 
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
+
+ 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -48,6 +52,7 @@ public class RobotContainer
   {
     //regaster pathplanner commands here
     configureBindings();
+
   }
 
   /**
@@ -59,45 +64,35 @@ public class RobotContainer
    */
   private void configureBindings()
   {
-    new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
+
+    NamedCommands.registerCommand("atReef", new WaitCommand(10));
+
+    new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
+
+    new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
+      drivebase, 
+      () -> -drive_joystick.getY(), 
+      () -> -drive_joystick.getX(), 
+      () -> angle_joystick.getX(),
+      () -> ((angle_joystick.getPOV(0) > 90 && angle_joystick.getPOV(0) < 270) && (angle_joystick.getPOV(0) != -1)), 
+      () -> ((angle_joystick.getPOV(0) > 270 || angle_joystick.getPOV(0) < 90) && (angle_joystick.getPOV(0) != -1)),  
+      () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1)),
+      () -> ((angle_joystick.getPOV(0) > 180 && angle_joystick.getPOV(0) < 359) && (angle_joystick.getPOV(0) != -1))
+      
+      ));
 
     drivebase.removeDefaultCommand();
+
+
+
     drivebase.setDefaultCommand(
-
-      // new TeleopDrive(drivebase,
-      // () -> drive_joystick.getY(), 
-      // () -> drive_joystick.getX(),
-      // () -> angle_joystick.getX(),
-      // () -> false
-      // )
-
-
-      // This is a more advanced version of TeleopDrive that can go to 4 set headings with a button press
-
-      new AbsoluteDriveAdv(drivebase,
-        () -> drive_joystick.getY(),
-        () -> drive_joystick.getX(),
-        () -> angle_joystick.getX(),
-        () -> false,
-        () -> false,
-        () -> false,
-        () -> false
-
-      )
-
-      // new AbsoluteFieldDrive(drivebase,
-      //   () -> drive_joystick.getY(),
-      //   () -> drive_joystick.getX(),
-      //   () -> ((drivebase.getHeading().getDegrees()) + angle_joystick.getX()) 
-      
-      // )
     
-      // new AbsoluteDrive(drivebase, 
-      //   () -> drive_joystick.getY(), 
-      //   () -> drive_joystick.getX(), 
-      //   () -> angle_joystick.getX(),
-      //   () -> -angle_joystick.getY()
-      // )
+      new AbsoluteDrive(drivebase, 
+        () -> -drive_joystick.getY(), 
+        () -> -drive_joystick.getX(), 
+        () -> -angle_joystick.getX(),
+        () -> -angle_joystick.getY()
+      )
     );
   }
 
@@ -109,7 +104,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return drivebase.getAutonomousCommand("Auto 1");
 
   }
 
