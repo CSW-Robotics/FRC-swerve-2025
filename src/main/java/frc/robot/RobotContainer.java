@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -27,6 +29,9 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+
+import javax.naming.PartialResultException;
+
 import swervelib.SwerveInputStream;
 import swervelib.imu.AnalogGyroSwerve;
 
@@ -64,8 +69,8 @@ public class RobotContainer
    */
   private void configureBindings()
   {
+    NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
-    NamedCommands.registerCommand("atReef", new WaitCommand(10));
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
@@ -95,7 +100,6 @@ public class RobotContainer
       )
     );
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
