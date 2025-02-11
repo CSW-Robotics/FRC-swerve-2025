@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -133,18 +134,26 @@ public class Robot extends TimedRobot
       CommandScheduler.getInstance().cancelAll();
     }
     m_robotContainer.setDriveMode();
-  }
 
-  
-  DigitalInput limit_switch = new DigitalInput(5);
 
-  
 
+    // set up port
+    distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
+    distOnboard.setAutomaticMode(true);
+  }  
+
+
+  // code: https://github.com/REVrobotics/2m-Distance-Sensor/releases/tag/v2023.0.4
+  // venderdep: https://github.com/REVrobotics/2m-Distance-Sensor?tab=readme-ov-file
+  private Rev2mDistanceSensor distOnboard; 
   @Override
   public void teleopPeriodic()
   {
-
-    System.out.println(limit_switch.get());
+    // print out value
+    if(distOnboard.isRangeValid()) {
+      System.out.println(distOnboard.getRange());
+    }
+    
   }
 
   @Override
