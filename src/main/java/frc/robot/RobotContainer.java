@@ -79,6 +79,11 @@ public class RobotContainer
       () -> -drive_joystick.getY(), 
       () -> -drive_joystick.getX(), 
       () -> angle_joystick.getX(),
+
+      //checks what quadrent the angle is in and sets the two closest axis variables to true
+      // the != -1 checks to make sure the knob is moves as -1 is the default possition
+      // this in effect gives you field oriented control on the knob with fine tuning with left and right on the x axis of the joystick
+      
       () -> ((angle_joystick.getPOV(0) > 90 && angle_joystick.getPOV(0) < 270) && (angle_joystick.getPOV(0) != -1)), 
       () -> ((angle_joystick.getPOV(0) > 270 || angle_joystick.getPOV(0) < 90) && (angle_joystick.getPOV(0) != -1)),  
       () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1)),
