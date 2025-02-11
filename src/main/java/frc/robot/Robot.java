@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -134,12 +135,16 @@ public class Robot extends TimedRobot
     m_robotContainer.setDriveMode();
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
+  
+  DigitalInput limit_switch = new DigitalInput(5);
+
+  
+
   @Override
   public void teleopPeriodic()
   {
+
+    System.out.println(limit_switch.get());
   }
 
   @Override
