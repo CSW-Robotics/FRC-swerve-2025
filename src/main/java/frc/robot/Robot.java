@@ -4,6 +4,13 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inch;
+import static edu.wpi.first.units.Units.Inches;
+
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -55,7 +62,18 @@ public class Robot extends TimedRobot
     {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+
+        // set up port
+        distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
+        distOnboard.setAutomaticMode(true);
+        distOnboard.setDistanceUnits(Unit.kMillimeters);
   }
+
+   // code: https://github.com/REVrobotics/2m-Distance-Sensor/releases/tag/v2023.0.4
+  // venderdep: https://github.com/REVrobotics/2m-Distance-Sensor?tab=readme-ov-file
+  private Rev2mDistanceSensor distOnboard; 
+
+  // more code in robot perodic
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics that you want ran
@@ -72,6 +90,11 @@ public class Robot extends TimedRobot
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    // print out value
+    if(true) { //(distOnboard.isRangeValid()
+      System.out.println(distOnboard.getRange());
+    }
   }
 
   /**
@@ -134,26 +157,11 @@ public class Robot extends TimedRobot
       CommandScheduler.getInstance().cancelAll();
     }
     m_robotContainer.setDriveMode();
-
-
-
-    // set up port
-    distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
-    distOnboard.setAutomaticMode(true);
   }  
 
-
-  // code: https://github.com/REVrobotics/2m-Distance-Sensor/releases/tag/v2023.0.4
-  // venderdep: https://github.com/REVrobotics/2m-Distance-Sensor?tab=readme-ov-file
-  private Rev2mDistanceSensor distOnboard; 
   @Override
   public void teleopPeriodic()
-  {
-    // print out value
-    if(distOnboard.isRangeValid()) {
-      System.out.println(distOnboard.getRange());
-    }
-    
+  { 
   }
 
   @Override

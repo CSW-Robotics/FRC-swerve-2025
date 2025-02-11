@@ -78,7 +78,7 @@ public class RobotContainer
       drivebase, 
       () -> -drive_joystick.getY(), 
       () -> -drive_joystick.getX(), 
-      () -> angle_joystick.getX(),
+      () -> -angle_joystick.getX(),
 
       //checks what quadrent the angle is in and sets the two closest axis variables to true
       // the != -1 checks to make sure the knob is moves as -1 is the default possition
@@ -86,8 +86,8 @@ public class RobotContainer
 
       () -> ((angle_joystick.getPOV(0) > 90 && angle_joystick.getPOV(0) < 270) && (angle_joystick.getPOV(0) != -1)), 
       () -> ((angle_joystick.getPOV(0) > 270 || angle_joystick.getPOV(0) < 90) && (angle_joystick.getPOV(0) != -1)),  
-      () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1)),
-      () -> ((angle_joystick.getPOV(0) > 180 && angle_joystick.getPOV(0) < 359) && (angle_joystick.getPOV(0) != -1))
+      () -> ((angle_joystick.getPOV(0) > 180 && angle_joystick.getPOV(0) < 359) && (angle_joystick.getPOV(0) != -1)),
+      () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1))
       
       ));
 
@@ -97,7 +97,7 @@ public class RobotContainer
       new AbsoluteDrive(drivebase, 
         () -> -drive_joystick.getY(), 
         () -> -drive_joystick.getX(), 
-        () -> -angle_joystick.getX(),
+        () -> angle_joystick.getX(),
         () -> -angle_joystick.getY()
       )
     );
