@@ -9,6 +9,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -69,25 +70,34 @@ public class RobotContainer
    */
   private void configureBindings()
   {
+
+
+    
+    
+    DigitalInput magnetic_limit_switch = new DigitalInput(5);
+
+    
+    new JoystickButton(angle_joystick, 8).onTrue(Commands.print(magnetic_limit_switch.toString()));
+
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
 
-    new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
+    new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro));
 
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
       () -> -drive_joystick.getY(), 
       () -> -drive_joystick.getX(), 
-      () -> -angle_joystick.getX(),
+      () -> angle_joystick.getX(),
 
       //checks what quadrent the angle is in and sets the two closest axis variables to true
       // the != -1 checks to make sure the knob is moves as -1 is the default possition
       // this in effect gives you field oriented control on the knob with fine tuning with left and right on the x axis of the joystick
-
+      
       () -> ((angle_joystick.getPOV(0) > 90 && angle_joystick.getPOV(0) < 270) && (angle_joystick.getPOV(0) != -1)), 
       () -> ((angle_joystick.getPOV(0) > 270 || angle_joystick.getPOV(0) < 90) && (angle_joystick.getPOV(0) != -1)),  
-      () -> ((angle_joystick.getPOV(0) > 180 && angle_joystick.getPOV(0) < 359) && (angle_joystick.getPOV(0) != -1)),
-      () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1))
+      () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1)),
+      () -> ((angle_joystick.getPOV(0) > 180 && angle_joystick.getPOV(0) < 359) && (angle_joystick.getPOV(0) != -1))
       
       ));
 
@@ -97,7 +107,7 @@ public class RobotContainer
       new AbsoluteDrive(drivebase, 
         () -> -drive_joystick.getY(), 
         () -> -drive_joystick.getX(), 
-        () -> angle_joystick.getX(),
+        () -> -angle_joystick.getX(),
         () -> -angle_joystick.getY()
       )
     );
@@ -110,7 +120,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("Test Auto");
+    return drivebase.getAutonomousCommand("Auto 1");
 
   }
 

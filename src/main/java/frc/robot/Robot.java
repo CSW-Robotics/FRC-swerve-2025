@@ -9,9 +9,9 @@ import static edu.wpi.first.units.Units.Inches;
 
 import javax.management.InstanceNotFoundException;
 
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-import com.revrobotics.Rev2mDistanceSensor.Unit;
+// import com.revrobotics.Rev2mDistanceSensor;
+// import com.revrobotics.Rev2mDistanceSensor.Port;
+// import com.revrobotics.Rev2mDistanceSensor.Unit;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -77,14 +77,14 @@ public class Robot extends TimedRobot
     }
 
         // set up port
-        distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
-        distOnboard.setAutomaticMode(true);
-        distOnboard.setDistanceUnits(Unit.kMillimeters);
+        // distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
+        // distOnboard.setAutomaticMode(true);
+        // distOnboard.setDistanceUnits(Unit.kMillimeters);
   }
 
    // code: https://github.com/REVrobotics/2m-Distance-Sensor/releases/tag/v2023.0.4
   // venderdep: https://github.com/REVrobotics/2m-Distance-Sensor?tab=readme-ov-file
-  private Rev2mDistanceSensor distOnboard; 
+  // private Rev2mDistanceSensor distOnboard; 
 
   // more code in robot perodic
 
@@ -105,9 +105,9 @@ public class Robot extends TimedRobot
     CommandScheduler.getInstance().run();
 
     // print out value
-    if(true) { //(distOnboard.isRangeValid()
-      System.out.println(distOnboard.getRange());
-    }
+    // if(true) { //(distOnboard.isRangeValid()
+    //   System.out.println(distOnboard.getRange());
+    // }
   }
 
   /**

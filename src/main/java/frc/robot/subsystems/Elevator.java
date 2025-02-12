@@ -25,22 +25,21 @@ public class Elevator {
     int CurrentStage = 0;
     int DesiredStage;
     boolean PrevousSwitch = false;
-    double P = 0.03;
 
     public Elevator(){
 
     }
 
-    // we run this and moveTo in robot periodic or something along those lines and then we just need to bind desired height and
-    // it should work for the most part
-    // here again we dont need the if statements as because Direction is 1,-1,0 the math works out
+    // we run this and moveTo in robot periodic or something along those lines and then we just need to set the desired height.
     public void CheckSwitch() {
 
-        // everytime this switch changes to true from false it triggers this code to change the sector
+        // everytime this switch changes to true from false it triggers this code to change the sector/
         if (PrevousSwitch != limitSwitch.get() && PrevousSwitch != true) {
 
+            // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
             CurrentStage = CurrentStage + Direction();
 
+            // we set the prevous switch to this so that we dont loop this command while the switch is true
             PrevousSwitch = limitSwitch.get();
 
         }
@@ -63,14 +62,22 @@ public class Elevator {
     }
     
    
-    // sets the motors to the right speed because direction is 1,-1,0 this works out
     public void MoveTo(){
-        
-            //make p later
-            motor1.set(P*Direction());
-            motor2.set(P*Direction());
+
+            // we multiply the motor starting speed by direction because direction is 1,-1,0 this works out
+
+            // after that we then divide by 4 - the absolute value of the difference of the stages
+            // this means it travels faster when it is farther away and when the difference approaches 0 the motor
+            // speed approaches 0.02.
+            // this gives us a kind of sudo PiD without the use of a distance sensor.
+            motor1.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
+            motor2.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
+ 
+
     }
 
+    // this is just one function we call that runs all of our check functions
+    // I did this because I couldnt figure out how to bind a trigger to when the limit switch is pressed
     public void ElevatorPeriodic() {
 
         this.CheckSwitch();
