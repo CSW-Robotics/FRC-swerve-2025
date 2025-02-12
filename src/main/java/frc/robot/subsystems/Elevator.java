@@ -26,6 +26,7 @@ public class Elevator extends SubsystemBase {
 
     int CurrentStage = 0;
     int DesiredStage = 0;
+    boolean ShouldMove = true;
 
     public Elevator(){
 
@@ -56,6 +57,9 @@ public class Elevator extends SubsystemBase {
    
     public void MoveTo(){
 
+        // we use this to overide the automatic movement
+        if (ShouldMove == true) {
+
             // we multiply the motor starting speed by direction because direction is 1,-1,0 this works out
 
             // after that we then divide by 4 - the absolute value of the difference of the stages
@@ -65,11 +69,33 @@ public class Elevator extends SubsystemBase {
             motor1.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
             motor2.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
  
+        }
+    }
+
+
+    // a function to just set the motors that we will use to overide the automatic algorithm,
+    public void SetMotor(double speed){
+
+
+        // if the speed is not 0 it stops tha automatic algorithm
+        if (speed != 0) {
+            ShouldMove = false;
+        }
+
+        // sets the speed to the givin speed
+        motor1.set(speed);
+        motor2.set(speed);
+
+        // if the speed is equal to zero it turns back on the automatic algorithm
+        if (speed == 0) {
+            ShouldMove = true;
+        }
 
     }
 
     @Override
     public void periodic(){
+        MoveTo();
     }
 
     @Override

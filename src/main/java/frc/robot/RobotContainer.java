@@ -27,6 +27,7 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -48,6 +49,7 @@ public class RobotContainer
                                                                                 "swerve/neo"));
 
   private final LimeLight m_Limelight = new LimeLight();
+  private final Elevator m_Elevator = new Elevator();
 
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
@@ -76,6 +78,13 @@ public class RobotContainer
 
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
+
+    // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
+    new JoystickButton(drive_joystick, 3).onTrue((new InstantCommand(()-> m_Elevator.SetMotor(0.3))));
+    new JoystickButton(drive_joystick, 3).onFalse((new InstantCommand(()-> m_Elevator.SetMotor(0))));
+
+    new JoystickButton(drive_joystick, 2).onTrue((new InstantCommand(()-> m_Elevator.SetMotor(-0.3))));
+    new JoystickButton(drive_joystick, 2).onFalse((new InstantCommand(()-> m_Elevator.SetMotor(0))));
 
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
