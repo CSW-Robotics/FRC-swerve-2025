@@ -17,8 +17,7 @@ public class Dropper extends SubsystemBase {
 
     // create the physical objects that the subsytem uses
     // motors, sensors,...
-    private SparkMax dropper_motor1 = new SparkMax(0, MotorType.kBrushless);
-    private SparkMax dropper_motor2 = new SparkMax(0, MotorType.kBrushless);
+    private SparkMax dropper_motor = new SparkMax(0, MotorType.kBrushless);
 
 // constructor - will be run ONCE when this class, ExampleSubsystem, is instantiated
 // used to run code that only needs to be done once, such as setting presets or constants
@@ -30,15 +29,13 @@ public class Dropper extends SubsystemBase {
 
 // demonstrative method that sets the motor speed
   public void setMotorSpeed(double speed) {
-    dropper_motor1.set(speed);
-    dropper_motor2.set(speed);
+    dropper_motor.set(speed);
   }
 
   @Override
   public void periodic() {
     // WPILIB MUST HAVE - this method will be called once per scheduler run - 20ms
-    System.out.println(dropper_motor1.getEncoder().getVelocity()); // print motor velocity
-    System.out.println(dropper_motor2.getEncoder().getVelocity()); // print state of DigitalInput
+    System.out.println(dropper_motor.getEncoder().getVelocity()); // print motor velocity
   }
 
   @Override
