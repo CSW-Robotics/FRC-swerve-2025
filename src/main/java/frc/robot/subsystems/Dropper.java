@@ -32,21 +32,24 @@ public class Dropper extends SubsystemBase {
 
   // demonstrative method that returns the state of the digital input
   public boolean getInput() { 
+    // gets t/f for limit switch
     return coralIn.get();
   }
 
 // demonstrative method that sets the motor speed
   public void startMotors(double speed) {
+    // sets motors to speed
     dropper_motor.set(speed);
     }
   
-
   public void stopMotors() {
+    // sets speed to 0
    dropper_motor.set(0); 
   }
 
   public void takeIn() {
-    if (getInput() == false){
+    // method run when taking in coral, runs motors until limit switch is true
+    if (getInput() == false) {
       startMotors(.05);
     }
     if (getInput() == true) {
@@ -55,11 +58,12 @@ public class Dropper extends SubsystemBase {
   }
 
   public void pushOut() {
-    if (getInput() == true){
+    // method run when pushing coral out, runs motors until limit switch is false
+    if (getInput() == true) {
       startMotors(.05);
+    }
     if (getInput() == false) {
       stopMotors();
-    }
     }
   }
 
