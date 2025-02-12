@@ -10,14 +10,15 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.LimitSwitchConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class Elevator {
     
-    SparkMax motor1 = new SparkMax(0, null);
-    SparkMax motor2 = new SparkMax(1, null);
+    SparkMax motor1 = new SparkMax(0, MotorType.kBrushless);
+    SparkMax motor2 = new SparkMax(1, MotorType.kBrushless);
     
     // DititalInput.get returns true or false for on and off
     DigitalInput limitSwitch = new DigitalInput(2);
