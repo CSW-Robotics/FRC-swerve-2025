@@ -47,8 +47,6 @@ public class CoralOutput extends SubsystemBase {
 
   }
 
-
-
 // A function to open up the Solenoid
 
   public void openSolenoid(double speed) {
@@ -63,9 +61,14 @@ public class CoralOutput extends SubsystemBase {
   @Override
   public void periodic() {
     // WPILIB MUST HAVE - this method will be called once per scheduler run - 20ms
+    System.out.print("Solenoid Channel: ");
+    System.out.println(m_Solenoid.getChannel());
 
-    //System.out.println(coral_motor.getEncoder().getVelocity()); // print motor velocity
-    //System.out.println(coral_input.get()); // print state of DigitalInput
+    System.out.print("Solenoid State: ");
+    System.out.println(m_Solenoid.get());
+
+    System.out.print("Class: ");
+    System.out.println(m_Solenoid.getClass());
   }
 
   @Override
