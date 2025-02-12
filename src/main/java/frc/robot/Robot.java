@@ -65,7 +65,8 @@ public class Robot extends TimedRobot
     InstantCommand Elevator_Periodic = new InstantCommand(()-> m_Elevator.ElevatorPeriodic());
     
     // Schedules the elevator to always check where it wants to go and then move to that.
-    CommandScheduler.getInstance().schedule(Elevator_Periodic);
+    // CommandScheduler.getInstance().schedule(Elevator_Periodic);
+    CommandScheduler.getInstance().schedule(new InstantCommand(() -> System.out.println("Hello")));
 
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
