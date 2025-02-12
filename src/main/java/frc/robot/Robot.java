@@ -62,14 +62,6 @@ public class Robot extends TimedRobot
 
     Elevator m_Elevator = new Elevator();
 
-    // set this command as a variable so we can change it later
-    InstantCommand Elevator_Periodic_Instant = new InstantCommand(()-> m_Elevator.ElevatorPeriodic());
-    // we need this so the instant command repeats until stopped.
-    RepeatCommand Elevator_Periodic = new RepeatCommand(Elevator_Periodic_Instant);
-    
-    // Schedules the elevator to always check where it wants to go and then move to that.
-    CommandScheduler.getInstance().schedule(Elevator_Periodic);
-
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();

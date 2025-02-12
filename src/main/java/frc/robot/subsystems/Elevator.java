@@ -25,25 +25,16 @@ public class Elevator {
 
     int CurrentStage = 0;
     int DesiredStage = 0;
-    boolean PrevousSwitch = false;
 
     public Elevator(){
 
     }
 
     // we run this and moveTo in robot periodic or something along those lines and then we just need to set the desired height.
-    public void CheckSwitch() {
-
-        // everytime this switch changes to true from false it triggers this code to change the sector/
-        if (PrevousSwitch != limitSwitch.get() && PrevousSwitch != true) {
+    public void AddToCurrentStage() {
 
             // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
             CurrentStage = CurrentStage + Direction();
-
-        }
-
-         // we set the prevous switch to this so that we dont loop this command while the switch is true
-        PrevousSwitch = limitSwitch.get();
 
     }
 
@@ -75,15 +66,6 @@ public class Elevator {
             motor2.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
  
 
-    }
-
-    // this is just one function we call that runs all of our check functions
-    // I did this because I couldnt figure out how to bind a trigger to when the limit switch is pressed
-    public void ElevatorPeriodic() {
-
-        this.CheckSwitch();
-
-        this.MoveTo();
     }
 
 }
