@@ -29,8 +29,7 @@ public class Elevator {
     public Elevator(){
 
     }
-
-    // we run this and moveTo in robot periodic or something along those lines and then we just need to set the desired height.
+    
     public void AddToCurrentStage() {
 
             // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
