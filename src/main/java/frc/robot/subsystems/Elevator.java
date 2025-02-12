@@ -10,7 +10,8 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.LimitSwitchConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpcilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class Elevator {
@@ -20,59 +21,63 @@ public class Elevator {
     
     // DititalInput.get returns true or false for on and off
     DigitalInput limitSwitch = new DigitalInput(2);
-     //parkLimitSwitchSim limits = new SparkLimitSwitchSim(motor2, false);
-  
+
     int CurrentStage = 0;
     int DesiredStage;
+    boolean PrevousSwitch = false;
+    double P = 0.03;
 
-    // Tells what stage the elevator is at
-    //MAKE STRING LATER FOR READABILLITY
-    public String Direction(DigitalInput i){
+    public Elevator(){
+
+    }
+
+    // we run this and moveTo in robot periodic or something along those lines and then we just need to bind desired height and
+    // it should work for the most part
+    // here again we dont need the if statements as because Direction is 1,-1,0 the math works out
+    public void CheckSwitch() {
+
+        // everytime this switch changes to true from false it triggers this code to change the sector
+        if (PrevousSwitch != limitSwitch.get() && PrevousSwitch != true) {
+
+            CurrentStage = CurrentStage + Direction();
+
+            PrevousSwitch = limitSwitch.get();
+
+        }
+
+    }
+
+    
+
+    // Gives us the current direction based off of the desired stage
+    public int Direction(){
             if (CurrentStage > DesiredStage){
-                return "DOWN";
+                return -1;
             }
             else if (CurrentStage < DesiredStage){
-                return "UP";
+                return 1;
             }
             else{
-                return "THERE";
+                return 0;
             }
     }
-    // Returns what stage the robot was most recently at
-    public int Stage(){
-        if (limitSwitch.get() && Direction(limitSwitch) == "DOWN"){
-            CurrentStage = CurrentStage - 1;
+    
+   
+    // sets the motors to the right speed because direction is 1,-1,0 this works out
+    public void MoveTo(){
         
-        }
-        else if (limitSwitch.get() && Direction(limitSwitch) == "UP"){
-            CurrentStage = CurrentStage + 1;
-        
-        }
-        else if (limitSwitch.get() && Direction(limitSwitch) == "THERE"){
-            CurrentStage = CurrentStage;
-        }
-        else{
-            // add somthing here
-        }
-        return CurrentStage;
+            //make p later
+            motor1.set(P*Direction());
+            motor2.set(P*Direction());
     }
 
-    public void MoveTo(){
-        if (Direction(limitSwitch) == "UP"){
-            //make p later
-            motor1.set(.3);
-            motor2.set(.3);
-        }
-        else if (Direction(limitSwitch) == "DOWN"){
-            motor1.set(-0.3);
-            motor2.set(-0.3);
-        }
-        else if (Direction(limitSwitch) == "THERE"){
-            //change to brake mode when we find out
-            motor1.set(0);
-            motor2.set(0);
-        }
+    public void ElevatorPeriodic() {
+
+        this.CheckSwitch();
+
+        this.MoveTo();
     }
+
 }
 
 
