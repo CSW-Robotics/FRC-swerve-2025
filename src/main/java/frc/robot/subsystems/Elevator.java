@@ -68,9 +68,12 @@ public class Elevator extends SubsystemBase {
 
     }
 
+    @Override
     public void periodic(){
+    }
 
-        
+    @Override
+    public void simulationPeriodic() {
     }
 
 }
