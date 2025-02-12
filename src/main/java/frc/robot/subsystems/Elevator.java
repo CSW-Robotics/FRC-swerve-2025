@@ -24,7 +24,7 @@ public class Elevator {
     DigitalInput limitSwitch = new DigitalInput(2);
 
     int CurrentStage = 0;
-    int DesiredStage;
+    int DesiredStage = 0;
     boolean PrevousSwitch = false;
 
     public Elevator(){
