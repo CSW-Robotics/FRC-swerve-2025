@@ -57,6 +57,7 @@ public class LimeLight extends SubsystemBase {
         double getpipe = entry_getpipe.getDouble(0.0);
 
         Dx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+        System.out.println(Dx3_data3D);
     }
 
     @Override
