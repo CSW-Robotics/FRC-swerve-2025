@@ -1,7 +1,6 @@
 
 package frc.robot.subsystems;
 
-import frc.robot.commands.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -57,7 +56,11 @@ public class LimeLight extends SubsystemBase {
         double getpipe = entry_getpipe.getDouble(0.0);
 
         Dx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
-        System.out.println(Dx3_data3D);
+        for (int i=0; i<6; i++) {
+            System.out.print(Dx3_data3D[i] + ", ");
+        }
+        System.out.println(" ");
+        
     }
 
     @Override
