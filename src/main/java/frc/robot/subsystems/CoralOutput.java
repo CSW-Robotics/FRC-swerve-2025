@@ -67,7 +67,7 @@ public class CoralOutput extends SubsystemBase {
     System.out.print("Solenoid State: ");
     System.out.println(m_Solenoid.get());
 
-    System.out.print("Class: ");
+    System.out.print("Solenoid Class: ");
     System.out.println(m_Solenoid.getClass());
   }
 
