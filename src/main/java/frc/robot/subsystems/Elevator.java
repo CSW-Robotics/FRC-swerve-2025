@@ -40,10 +40,10 @@ public class Elevator {
             // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
             CurrentStage = CurrentStage + Direction();
 
-            // we set the prevous switch to this so that we dont loop this command while the switch is true
-            PrevousSwitch = limitSwitch.get();
-
         }
+
+         // we set the prevous switch to this so that we dont loop this command while the switch is true
+        PrevousSwitch = limitSwitch.get();
 
     }
 
