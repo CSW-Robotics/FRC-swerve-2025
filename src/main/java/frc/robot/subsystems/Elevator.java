@@ -10,7 +10,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.LimitSwitchConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpcilibj.motorcontrol.Spark;
 
 
 public class Elevator {
