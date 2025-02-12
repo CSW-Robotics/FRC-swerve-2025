@@ -1,7 +1,7 @@
 // This is an example subsystem made by me, Max Lawton, to show the structure of a subsystem
 // For this class you must have the folloing
-// 1. extend the SubsystemBase
-// 2. have a constructor, see lines 23-28
+// 1. extend the SubsystemBase in the declaration (lines 15-16)
+// 2. have a constructor (lines 23-28)
 // 3. include (void)methods periodic() and simulationPeriodic()
 
 // imports, usually done automatically by vscode
@@ -20,14 +20,14 @@ public class ExampleSubsystem extends SubsystemBase {
     private SparkMax test_motor = new SparkMax(0, MotorType.kBrushless);
     private DigitalInput test_input = new DigitalInput(0);
 
-// constructor - will be run ONCE when this class, ExampleSubsystem, is created
+// constructor - will be run ONCE when this class, ExampleSubsystem, is instantiated
+// used to run code that only needs to be done once, such as setting presets or constants
 // must have exactly the same name as the class
 // also, this is where other subsystems are passed into this one, such as the drivebase for example
   public ExampleSubsystem(SwerveSubsystem drivebase) {
-    // run code that only needs to be done once, such as setting presets
   }
 
-// demonstrative method that returns the state of the encoder
+// demonstrative method that returns the state of the digital input
   public boolean getInput() { 
     return test_input.get();
   }
