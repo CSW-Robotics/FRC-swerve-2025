@@ -12,10 +12,11 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
-public class Elevator {
+public class Elevator extends SubsystemBase {
     
     SparkMax motor1 = new SparkMax(0, MotorType.kBrushless);
     SparkMax motor2 = new SparkMax(1, MotorType.kBrushless);
@@ -29,7 +30,7 @@ public class Elevator {
     public Elevator(){
 
     }
-    
+
     public void AddToCurrentStage() {
 
             // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
@@ -65,6 +66,11 @@ public class Elevator {
             motor2.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
  
 
+    }
+
+    public void periodic(){
+
+        
     }
 
 }
