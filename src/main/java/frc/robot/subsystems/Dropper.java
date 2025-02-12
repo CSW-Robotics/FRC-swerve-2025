@@ -21,15 +21,6 @@ public class Dropper extends SubsystemBase {
     private SparkMax dropper_motor = new SparkMax(0, MotorType.kBrushless);
     private DigitalInput coralIn = new DigitalInput(0);
 
-
-// constructor - will be run ONCE when this class, ExampleSubsystem, is instantiated
-// used to run code that only needs to be done once, such as setting presets or constants
-// must have exactly the same name as the class
-// also, this is where other subsystems are passed into this one, such as the drivebase for example
-  public Dropper(SwerveSubsystem drivebase) {
-    // constructor, doesnt have any presets (don't need right now)
-  }
-
   // demonstrative method that returns the state of the digital input
   public boolean getInput() { 
     return coralIn.get();
