@@ -32,8 +32,8 @@ public class Dropper extends SubsystemBase {
     dropper_motor.set(speed);
   }
 
-  public void stopMotors(double speed) {
-    
+  public void stopMotors() {
+   dropper_motor.set(0); 
   }
 
   @Override
