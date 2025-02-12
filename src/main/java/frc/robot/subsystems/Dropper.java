@@ -28,8 +28,12 @@ public class Dropper extends SubsystemBase {
   }
 
 // demonstrative method that sets the motor speed
-  public void setMotorSpeed(double speed) {
+  public void startMotors(double speed) {
     dropper_motor.set(speed);
+  }
+
+  public void stopMotors(double speed) {
+    
   }
 
   @Override
