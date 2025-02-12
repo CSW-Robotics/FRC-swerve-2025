@@ -35,20 +35,6 @@ public class CoralOutput extends SubsystemBase {
     // THE SOLENOID
     private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
 
-    
-    // What is a digital input:
-
-
-// constructor - will be run ONCE when this class, ExampleSubsystem, is instantiated
-// used to run code that only needs to be done once, such as setting presets or constants
-// must have exactly the same name as the class
-// also, this is where other subsystems are passed into this one, such as the drivebase for example
-  public CoralOutput(SwerveSubsystem drivebase) {
-
-  }
-
-
-
 // A function to open up the Solenoid
 
   public void openSolenoid(double speed) {
@@ -63,9 +49,14 @@ public class CoralOutput extends SubsystemBase {
   @Override
   public void periodic() {
     // WPILIB MUST HAVE - this method will be called once per scheduler run - 20ms
+    System.out.print("Solenoid Channel: ");
+    System.out.println(m_Solenoid.getChannel());
 
-    //System.out.println(coral_motor.getEncoder().getVelocity()); // print motor velocity
-    //System.out.println(coral_input.get()); // print state of DigitalInput
+    System.out.print("Solenoid State: ");
+    System.out.println(m_Solenoid.get());
+
+    System.out.print("Solenoid Class: ");
+    System.out.println(m_Solenoid.getClass());
   }
 
   @Override
