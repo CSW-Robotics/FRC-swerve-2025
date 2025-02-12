@@ -10,70 +10,70 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.LimitSwitchConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
-public class Elevator {
+public class Elevator extends SubsystemBase {
     
-    SparkMax motor1 = new SparkMax(0, null);
-    SparkMax motor2 = new SparkMax(1, null);
+    SparkMax motor1 = new SparkMax(0, MotorType.kBrushless);
+    SparkMax motor2 = new SparkMax(1, MotorType.kBrushless);
     
     // DititalInput.get returns true or false for on and off
     DigitalInput limitSwitch = new DigitalInput(2);
-     //parkLimitSwitchSim limits = new SparkLimitSwitchSim(motor2, false);
-  
-    int CurrentStage = 0;
-    int DesiredStage;
 
-    // Tells what stage the elevator is at
-    //MAKE STRING LATER FOR READABILLITY
-    public String Direction(DigitalInput i){
+    int CurrentStage = 0;
+    int DesiredStage = 0;
+
+    public Elevator(){
+
+    }
+
+    public void AddToCurrentStage() {
+
+            // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
+            CurrentStage = CurrentStage + Direction();
+
+    }
+
+    
+
+    // Gives us the current direction based off of the desired stage
+    public int Direction(){
             if (CurrentStage > DesiredStage){
-                return "DOWN";
+                return -1;
             }
             else if (CurrentStage < DesiredStage){
-                return "UP";
+                return 1;
             }
             else{
-                return "THERE";
+                return 0;
             }
     }
-    // Returns what stage the robot was most recently at
-    public int Stage(){
-        if (limitSwitch.get() && Direction(limitSwitch) == "DOWN"){
-            CurrentStage = CurrentStage - 1;
-        
-        }
-        else if (limitSwitch.get() && Direction(limitSwitch) == "UP"){
-            CurrentStage = CurrentStage + 1;
-        
-        }
-        else if (limitSwitch.get() && Direction(limitSwitch) == "THERE"){
-            CurrentStage = CurrentStage;
-        }
-        else{
-            // add somthing here
-        }
-        return CurrentStage;
-    }
-
+    
+   
     public void MoveTo(){
-        if (Direction(limitSwitch) == "UP"){
-            //make p later
-            motor1.set(.3);
-            motor2.set(.3);
-        }
-        else if (Direction(limitSwitch) == "DOWN"){
-            motor1.set(-0.3);
-            motor2.set(-0.3);
-        }
-        else if (Direction(limitSwitch) == "THERE"){
-            //change to brake mode when we find out
-            motor1.set(0);
-            motor2.set(0);
-        }
+
+            // we multiply the motor starting speed by direction because direction is 1,-1,0 this works out
+
+            // after that we then divide by 4 - the absolute value of the difference of the stages
+            // this means it travels faster when it is farther away and when the difference approaches 0 the motor
+            // speed approaches 0.02.
+            // this gives us a kind of sudo PiD without the use of a distance sensor.
+            motor1.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
+            motor2.set((0.08*Direction())/(4-Math.abs(CurrentStage-DesiredStage)));
+ 
+
     }
+
+    @Override
+    public void periodic(){
+    }
+
+    @Override
+    public void simulationPeriodic() {
+    }
+
 }
-
-
-
-
