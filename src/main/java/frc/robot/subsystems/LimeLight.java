@@ -51,7 +51,7 @@ public class LimeLight extends SubsystemBase {
         double id = entry_tid.getDouble(0.0);
         double getpipe = entry_getpipe.getDouble(0.0);
 
-        DDDx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+        DDDx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
         for (int i=0; i<6; i++) {
             System.out.print(DDDx3_data3D[i] + ", ");
         }
