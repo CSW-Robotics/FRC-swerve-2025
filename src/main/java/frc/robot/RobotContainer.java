@@ -80,7 +80,6 @@ public class RobotContainer
   private void configureBindings()
   {
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
-    NamedCommands.registerCommand("OutputCoral", new InstantCommand(() -> auto_CoralOutput.openSolenoid()));
 
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
