@@ -86,6 +86,10 @@ public class RobotContainer
     new JoystickButton(drive_joystick, 2).onTrue((new InstantCommand(()-> m_Elevator.SetMotor(-0.3))));
     new JoystickButton(drive_joystick, 2).onFalse((new InstantCommand(()-> m_Elevator.SetMotor(0))));
 
+    // restarts the automatic movement of the elevator
+    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
+    
+
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
       () -> -drive_joystick.getY(), 

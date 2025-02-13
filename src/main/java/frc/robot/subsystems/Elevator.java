@@ -27,15 +27,22 @@ public class Elevator extends SubsystemBase {
     int CurrentStage = 0;
     int DesiredStage = 0;
     boolean ShouldMove = true;
+    boolean PrevousSwitchState = false;
 
     public Elevator(){
 
     }
 
-    public void AddToCurrentStage() {
+    public void CheckCurrentStage() {
 
+        // when the limit switch changes to true from false we add to the current stage
+        if (limitSwitch.get() == true && limitSwitch.get() != PrevousSwitchState) {
             // Because we have made direction 1,-1,0 we dont need complicated if statements we can just add the direction
             CurrentStage = CurrentStage + Direction();
+        }
+
+        // sets the prevous switch state to the current state
+        PrevousSwitchState = limitSwitch.get();
 
     }
 
@@ -76,26 +83,23 @@ public class Elevator extends SubsystemBase {
     // a function to just set the motors that we will use to overide the automatic algorithm,
     public void SetMotor(double speed){
 
-
-        // if the speed is not 0 it stops tha automatic algorithm
-        if (speed != 0) {
-            ShouldMove = false;
-        }
+        // stops the automatic movement
+        ShouldMove = false;
 
         // sets the speed to the givin speed
         motor1.set(speed);
         motor2.set(speed);
 
-        // if the speed is equal to zero it turns back on the automatic algorithm
-        if (speed == 0) {
-            ShouldMove = true;
-        }
+    }
 
+    public void RestartAutoMovement() {
+        ShouldMove = true;
     }
 
     @Override
     public void periodic(){
         MoveTo();
+        CheckCurrentStage();
     }
 
     @Override
