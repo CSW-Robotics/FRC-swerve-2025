@@ -24,7 +24,7 @@ public class Dropper extends SubsystemBase {
 // must have exactly the same name as the class
 // also, this is where other subsystems are passed into this one, such as the drivebase for example
   public Dropper(SwerveSubsystem drivebase) {
-
+      
   }
 
 // demonstrative method that sets the motor speed
@@ -39,6 +39,7 @@ public class Dropper extends SubsystemBase {
   @Override
   public void periodic() {
     // WPILIB MUST HAVE - this method will be called once per scheduler run - 20ms
+    
     System.out.println(dropper_motor.getEncoder().getVelocity()); // print motor velocity
   }
 
