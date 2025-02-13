@@ -53,7 +53,7 @@ public class RobotContainer
 
   private final LimeLight m_Limelight = new LimeLight();
   private final Elevator m_Elevator = new Elevator();
-  private final Dropper m_dropper = new Dropper();
+  private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public Joystick drive_joystick = new Joystick(0);
@@ -84,28 +84,34 @@ public class RobotContainer
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
-    new JoystickButton(angle_joystick, 8).onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)));
-    new JoystickButton(angle_joystick, 8).onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
+    new JoystickButton(angle_joystick, 8)
+      .onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)))
+      .onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
 
 
 
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
-    new JoystickButton(drive_joystick, 3).onTrue((new InstantCommand(()-> m_Elevator.SetMotor(0.3))));
-    new JoystickButton(drive_joystick, 3).onFalse((new InstantCommand(()-> m_Elevator.SetMotor(0))));
+    new JoystickButton(drive_joystick, 3)
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.3)))
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
-    new JoystickButton(drive_joystick, 2).onTrue((new InstantCommand(()-> m_Elevator.SetMotor(-0.3))));
-    new JoystickButton(drive_joystick, 2).onFalse((new InstantCommand(()-> m_Elevator.SetMotor(0))));
+    new JoystickButton(drive_joystick, 2)
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.3)))
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
     // restarts the automatic movement of the elevator
     new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
 
-    // binds the buttons to intake and output the coral
-    new JoystickButton(angle_joystick, 5).whileTrue((new InstantCommand(()-> m_dropper.takeIn())));
-    new JoystickButton(angle_joystick, 3).whileTrue((new InstantCommand(()-> m_dropper.pushOut())));
+    // take in coral
+    new JoystickButton(angle_joystick, 5)
+      .whileTrue(new InstantCommand(()-> m_Dropper.takeIn()))
+      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
-    // stops the motors when the button is released
-    new JoystickButton(angle_joystick, 5).onFalse((new InstantCommand(()-> m_dropper.startMotors(0.0))));
-    new JoystickButton(angle_joystick, 3).onFalse((new InstantCommand(()-> m_dropper.startMotors(0.0))));
+    // binds the buttons to output the coral
+    new JoystickButton(angle_joystick, 3)
+      .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
+      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+    
 
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
