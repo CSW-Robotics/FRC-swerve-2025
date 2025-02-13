@@ -53,7 +53,7 @@ public class RobotContainer
 
   private final LimeLight m_Limelight = new LimeLight();
   private final Elevator m_Elevator = new Elevator();
-  private final Dropper m_dropper = new Dropper();
+  private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public Joystick drive_joystick = new Joystick(0);
