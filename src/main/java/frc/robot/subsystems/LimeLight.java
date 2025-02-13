@@ -13,10 +13,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
-// don't use venderdrop, use this insted: 
-// https://first.wpi.edu/wpilib/allwpilib/docs/release/java/edu/wpi/first/wpilibj/ADIS16448_IMU.html
-
-
 public class LimeLight extends SubsystemBase {
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
