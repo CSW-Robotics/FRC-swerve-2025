@@ -24,8 +24,6 @@ public class Cmd_LimeLightTracking extends Command {
     @Override
     public void initialize() {
 
-        // make the drivetrain command
-
         Command drivebaseCommand = new TeleopDrive(
             m_drivebase, 
             // maximum x and y values are 25 so we divide by 25
@@ -43,33 +41,20 @@ public class Cmd_LimeLightTracking extends Command {
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {
-        // update that command
-
-    }
+    public void execute() {}
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         // stop drivetran command
-
         CommandScheduler.getInstance().cancel(drivebaseCommand);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-
-        if (m_LimeLight.DDDx3_data3D[2] <= 10) {
-
-            return true;
-        }
-
-        
-        else {
-        return false;
-        }
         // if we are close, kill THIS command
+        return m_LimeLight.DDDx3_data3D[2] <= 10 ?  true : false;
     }
 
     @Override
