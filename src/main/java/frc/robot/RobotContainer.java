@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Cmd_LimeLightTracking;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
@@ -110,6 +111,8 @@ public class RobotContainer
     new JoystickButton(angle_joystick, 3)
       .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+
+    new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_Limelight));
     
 
 
