@@ -35,13 +35,13 @@ public class CoralOutput extends SubsystemBase {
     // THE SOLENOID
     private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
 
-// A function to open up the Solenoid
 
-  public void openSolenoid(double speed) {
+
+  public void openSolenoid() {
     m_Solenoid.set(true);
   }
 
-  public void closeSolenoid(double speed) {
+  public void closeSolenoid() {
     m_Solenoid.set(false);
   }
 

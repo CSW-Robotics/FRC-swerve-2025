@@ -27,10 +27,13 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.subsystems.CoralOutput;
+import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import javax.naming.PartialResultException;
 
@@ -50,6 +53,8 @@ public class RobotContainer
 
   private final LimeLight m_Limelight = new LimeLight();
   private final Elevator m_Elevator = new Elevator();
+  private final Dropper m_dropper = new Dropper();
+  private final CoralOutput auto_CoralOutput = new CoralOutput();
 
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
@@ -75,6 +80,7 @@ public class RobotContainer
   private void configureBindings()
   {
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
+    NamedCommands.registerCommand("OutputCoral", new InstantCommand(() -> auto_CoralOutput.openSolenoid()));
 
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
@@ -88,7 +94,14 @@ public class RobotContainer
 
     // restarts the automatic movement of the elevator
     new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
-    
+
+    // binds the buttons to intake and output the coral
+    new JoystickButton(angle_joystick, 5).whileTrue((new InstantCommand(()-> m_dropper.takeIn())));
+    new JoystickButton(angle_joystick, 3).whileTrue((new InstantCommand(()-> m_dropper.pushOut())));
+
+    // stops the motors when the button is released
+    new JoystickButton(angle_joystick, 5).onFalse((new InstantCommand(()-> m_dropper.startMotors(0.0))));
+    new JoystickButton(angle_joystick, 3).onFalse((new InstantCommand(()-> m_dropper.startMotors(0.0))));
 
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
