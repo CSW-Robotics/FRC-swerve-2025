@@ -13,11 +13,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -82,11 +85,21 @@ public class RobotContainer
   {
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
+    NamedCommands.registerCommand("DropCoral", // command to drop coral
+      new SequentialCommandGroup( // open the solenoid, wait 2s, the close
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)),
+        new WaitCommand(2.0),
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
+      )
+    );
+      
+
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
-    new JoystickButton(angle_joystick, 8).onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)));
-    new JoystickButton(angle_joystick, 8).onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
+    new JoystickButton(angle_joystick, 8)
+      .onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)))
+      .onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
 
 
 
