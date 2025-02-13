@@ -1,9 +1,3 @@
-// This is an example subsystem made by me, Max Lawton, to show the structure of a subsystem
-// For this class you must have the folloing
-// 1. extend the SubsystemBase in the declaration (lines 15-16)
-// 2. have a constructor (lines 23-28)
-// 3. include (void)methods periodic() and simulationPeriodic()
-
 // imports, usually done automatically by vscode
 package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
@@ -60,13 +54,10 @@ public class Dropper extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // WPILIB MUST HAVE - this method will be called once per scheduler run - 20ms
     System.out.println(dropper_motor.getEncoder().getVelocity()); // print motor velocity
     System.out.println(coralIn.get());
   }
 
   @Override
-  public void simulationPeriodic() {
-    // WPILIB MUST HAVE - this method will be called once per scheduler run during simulation
-  } 
+  public void simulationPeriodic() {} 
 }
