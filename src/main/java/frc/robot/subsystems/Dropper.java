@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -10,6 +14,13 @@ public class Dropper extends SubsystemBase {
 
     private SparkMax dropper_motor = new SparkMax(0, MotorType.kBrushless);
     private DigitalInput coral_in = new DigitalInput(0);
+
+    private SparkMaxConfig spark_config = new SparkMaxConfig();
+
+  public Dropper() {
+    spark_config.idleMode(SparkBaseConfig.IdleMode.kBrake);
+    dropper_motor.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+  }
 
   // demonstrative method that returns the state of the digital input
   public boolean getInput() { 
