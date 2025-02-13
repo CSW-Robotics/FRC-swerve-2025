@@ -26,7 +26,7 @@ public class Elevator extends SubsystemBase {
 
     int CurrentStage = 0;
     int DesiredStage = 0;
-    boolean ShouldMove = true;
+    boolean ShouldMoveAutomatically = true;
     boolean PrevousSwitchState = false;
 
     public Elevator(){
@@ -65,7 +65,7 @@ public class Elevator extends SubsystemBase {
     public void MoveTo(){
 
         // we use this to overide the automatic movement
-        if (ShouldMove == true) {
+        if (ShouldMoveAutomatically == true) {
 
             // we multiply the motor starting speed by direction because direction is 1,-1,0 this works out
 
@@ -84,7 +84,7 @@ public class Elevator extends SubsystemBase {
     public void SetMotor(double speed){
 
         // stops the automatic movement
-        ShouldMove = false;
+        ShouldMoveAutomatically = false;
 
         // sets the speed to the givin speed
         motor1.set(speed);
@@ -93,7 +93,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void RestartAutoMovement() {
-        ShouldMove = true;
+        ShouldMoveAutomatically = true;
     }
 
     @Override
