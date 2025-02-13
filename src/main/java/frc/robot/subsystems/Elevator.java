@@ -4,10 +4,13 @@ import static edu.wpi.first.units.Units.derive;
 
 import org.dyn4j.collision.narrowphase.DistanceDetector;
 import com.revrobotics.sim.SparkLimitSwitchSim;
+import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLimitSwitch;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.LimitSwitchConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
@@ -28,9 +31,12 @@ public class Elevator extends SubsystemBase {
     int DesiredStage = 0;
     boolean ShouldMoveAutomatically = true;
     boolean PrevousSwitchState = false;
+    private SparkMaxConfig spark_config = new SparkMaxConfig();
 
     public Elevator(){
-
+        spark_config.idleMode(SparkBaseConfig.IdleMode.kBrake);
+        motor1.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+        motor2.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
     }
 
     public void CheckCurrentStage() {
