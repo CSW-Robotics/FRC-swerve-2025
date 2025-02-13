@@ -25,6 +25,13 @@ public class CoralOutput extends SubsystemBase {
 
     // create the physical objects that the subsytem uses
     // THE SOLENOID
+
+    // Note for the future:
+    // The ModuleType is a little confusing.
+    // It generally seems that we are unsure of what the module type to should actually be
+
+    // lastly, CHANGE THE CHANNEL ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // or else it won't do anything and we'll all be super confused for a long time
     private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     
 
