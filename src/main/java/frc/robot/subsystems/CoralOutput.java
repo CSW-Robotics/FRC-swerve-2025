@@ -26,15 +26,13 @@ public class CoralOutput extends SubsystemBase {
     // create the physical objects that the subsytem uses
     // THE SOLENOID
     private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+    
 
-
-
-  public void openSolenoid() {
-    m_Solenoid.set(true);
-  }
-
-  public void closeSolenoid() {
-    m_Solenoid.set(false);
+// either set true or false for turning on the solenoid
+// true is on
+// false is off
+  public void setSolenoid(boolean state) {
+    m_Solenoid.set(state);
   }
 
 
