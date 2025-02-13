@@ -54,7 +54,7 @@ public class RobotContainer
   private final LimeLight m_Limelight = new LimeLight();
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_dropper = new Dropper();
-  private final CoralOutput auto_CoralOutput = new CoralOutput();
+  private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
@@ -84,6 +84,11 @@ public class RobotContainer
 
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
+
+    new JoystickButton(angle_joystick, 8).onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)));
+    new JoystickButton(angle_joystick, 8).onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
+
+
 
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
     new JoystickButton(drive_joystick, 3).onTrue((new InstantCommand(()-> m_Elevator.SetMotor(0.3))));
