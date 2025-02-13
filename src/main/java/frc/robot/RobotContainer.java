@@ -53,7 +53,7 @@ public class RobotContainer
 
   private final LimeLight m_Limelight = new LimeLight();
   private final Elevator m_Elevator = new Elevator();
-  private final Dropper m_Dropper = new Dropper();
+  private final Dropper m_dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public Joystick drive_joystick = new Joystick(0);
@@ -84,9 +84,8 @@ public class RobotContainer
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
-    new JoystickButton(angle_joystick, 8)
-      .onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)))
-      .onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
+    new JoystickButton(angle_joystick, 8).onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)));
+    new JoystickButton(angle_joystick, 8).onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
 
 
 
@@ -112,6 +111,20 @@ public class RobotContainer
       .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
     
+
+
+    // a button that moves starts automatic tracking using the limelight
+    new JoystickButton(angle_joystick, 12).whileTrue(new TeleopDrive(
+      drivebase, 
+
+      // maximum x and y values are 25 so we divide by 25
+      ()-> -0.03*(m_Limelight.Dx3_data3D[0]/25), 
+      ()-> -0.03*(m_Limelight.Dx3_data3D[2]/25), 
+
+      // this needs to be worked on because I dont know what the values the limelight will give
+      ()-> -0.03*(m_Limelight.Dx3_data3D[5]/20), 
+      ()->false
+      ));
 
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
