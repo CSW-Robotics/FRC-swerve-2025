@@ -126,7 +126,7 @@ public class RobotContainer
       ()->false
       ));
 
-    // absoanbry dirve that switches to robot relived
+    // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
