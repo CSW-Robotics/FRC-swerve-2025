@@ -26,22 +26,15 @@ public class CoralOutput extends SubsystemBase {
     // create the physical objects that the subsytem uses
     // THE SOLENOID
     private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
-    private JoystickButton m_JoystickButton = new JoystickButton(drive_joystick, 0)
 
 
 
-    // look up which type of solenoid
-    // can I get it working
-    
+  public void openSolenoid() {
+    m_Solenoid.set(true);
+  }
 
-
-// A function to change the state of the Solenoid
-// true or false
-// true is open
-// false is closed
-
-  public void setSolenoid(boolean state) {
-    m_Solenoid.set(state);
+  public void closeSolenoid() {
+    m_Solenoid.set(false);
   }
 
 
@@ -64,6 +57,5 @@ public class CoralOutput extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // WPILIB MUST HAVE - this method will be called once per scheduler run during simulation
-    if (m_JoystickButton == true)
   }
 }
