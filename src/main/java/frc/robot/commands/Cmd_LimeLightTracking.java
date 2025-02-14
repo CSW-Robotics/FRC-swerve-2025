@@ -10,7 +10,7 @@ public class Cmd_LimeLightTracking extends Command {
 
     private final LimeLight m_LimeLight;
     private final SwerveSubsystem m_drivebase;
-    private Command drivebaseCommand;
+    private Command drivebase_command;
 
     public Cmd_LimeLightTracking(SwerveSubsystem drivebase, LimeLight subsystem) {
 
@@ -24,7 +24,7 @@ public class Cmd_LimeLightTracking extends Command {
     @Override
     public void initialize() {
 
-        Command drivebaseCommand = new TeleopDrive(
+        drivebase_command = new TeleopDrive(
             m_drivebase, 
             // maximum x and y values are 25 so we divide by 25
             ()-> (0.03/25)*m_LimeLight.DDDx3_data3D[2], 
@@ -36,7 +36,7 @@ public class Cmd_LimeLightTracking extends Command {
 
         );
 
-        CommandScheduler.getInstance().schedule(drivebaseCommand);
+        CommandScheduler.getInstance().schedule(drivebase_command);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -47,7 +47,7 @@ public class Cmd_LimeLightTracking extends Command {
     @Override
     public void end(boolean interrupted) {
         // stop drivetran command
-        CommandScheduler.getInstance().cancel(drivebaseCommand);
+        CommandScheduler.getInstance().cancel(drivebase_command);
     }
 
     // Returns true when the command should end.
