@@ -1,14 +1,8 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.lang.reflect.Array;
-
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -23,13 +17,13 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry entry_getpipe = table.getEntry("getpipe");
     
     // general AT data
-    public double tid;
+    public double tid = 0;
     public double getpipe;
 
     // 2d AT data
-    public double tx;
-    public double ty;
-    public double ta;
+    public double tx = 0;
+    public double ty = 0;
+    public double ta = 0;
 
     // 3d AT data
     public double[] DDDx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
@@ -45,11 +39,11 @@ public class LimeLight extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        double tx = entry_tx.getDouble(0.0);
-        double ty = entry_ty.getDouble(0.0);
-        double area = entry_ta.getDouble(0.0);
-        double id = entry_tid.getDouble(0.0);
-        double getpipe = entry_getpipe.getDouble(0.0);
+        tx = entry_tx.getDouble(0.0);
+        ty = entry_ty.getDouble(0.0);
+        ta = entry_ta.getDouble(0.0);
+        tid = entry_tid.getDouble(0.0);
+        getpipe = entry_getpipe.getDouble(0.0);
 
         DDDx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
         for (int i=0; i<6; i++) {
@@ -60,7 +54,5 @@ public class LimeLight extends SubsystemBase {
     }
 
     @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run when in simulation
-    }
+    public void simulationPeriodic() {}
 }
