@@ -32,14 +32,14 @@ public class CoralOutput extends SubsystemBase {
 
     // lastly, CHANGE THE CHANNEL ID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // or else it won't do anything and we'll all be super confused for a long time
-    private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
+    private Solenoid solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     
 
 // either set true or false for turning on the solenoid
 // true is on
 // false is off
   public void setSolenoid(boolean state) {
-    m_Solenoid.set(state);
+    solenoid.set(state);
   }
 
 
@@ -53,7 +53,7 @@ public class CoralOutput extends SubsystemBase {
     //System.out.println(m_Solenoid.getChannel());
 
     System.out.print("Solenoid State: ");
-    System.out.println(m_Solenoid.get());
+    System.out.println(solenoid.get());
 
     //System.out.print("Solenoid Class: ");
     //System.out.println(m_Solenoid.getClass());
