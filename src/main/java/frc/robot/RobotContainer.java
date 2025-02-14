@@ -89,7 +89,9 @@ public class RobotContainer
     NamedCommands.registerCommand("DropCoral", // command to drop coral
       new SequentialCommandGroup( // open the solenoid, wait 2s, the close
         new InstantCommand(() -> m_CoralOutput.setSolenoid(true)),
-        new WaitCommand(2.0),
+        new ParallelRaceGroup(
+          new WaitCommand(2.0),
+          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )),
         new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
       )
     );
