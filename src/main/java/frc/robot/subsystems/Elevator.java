@@ -23,9 +23,9 @@ public class Elevator extends SubsystemBase {
 
     // Define the motors which will move the elevator; James and I were unsure of the specific 
     // motor syntax. We also don't know the id's of the motors manning the elevator 
-    SparkMax motor1 = new SparkMax(0, MotorType.kBrushless);
+    SparkMax motor1 = new SparkMax(13, MotorType.kBrushless);
     // One of them will need to be inverted.
-    SparkMax motor2 = new SparkMax(1, MotorType.kBrushless);
+    SparkMax motor2 = new SparkMax(9, MotorType.kBrushless);
     
     // We only need one motor configuration, as we can set both motors to the same configuration
     SparkMaxConfig motorConfig = new SparkMaxConfig();
@@ -68,7 +68,7 @@ public class Elevator extends SubsystemBase {
         ShouldMoveAutomatically = false;
 
         // sets the speed to the givin speed
-        motor1.set(-speed);
+        motor1.set(speed);
         motor2.set(speed);
     }
 
@@ -100,7 +100,7 @@ public class Elevator extends SubsystemBase {
             
             if (ShouldMoveAutomatically == true) {
             double motorSpeed = 0.02*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
-            motor1.set(-motorSpeed);
+            motor1.set(motorSpeed);
             motor2.set(motorSpeed);
  
             }

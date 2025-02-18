@@ -9,7 +9,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LimeLight extends SubsystemBase {
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    private String m_network_table_key = "limelight";
+
+    public LimeLight(String network_table_key) {
+        m_network_table_key = network_table_key;
+    }
+
+    NetworkTable table = NetworkTableInstance.getDefault().getTable(m_network_table_key);
     NetworkTableEntry entry_tx = table.getEntry("tx");
     NetworkTableEntry entry_ty = table.getEntry("ty");
     NetworkTableEntry entry_ta = table.getEntry("ta");
@@ -26,14 +32,14 @@ public class LimeLight extends SubsystemBase {
     public double ta = 0;
 
     // 3d AT data
-    public double[] DDDx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+    public double[] DDDx3_data3D = NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("botpose").getDoubleArray(new double[6]);
 
     public void setAprilTag() {
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
+        NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("pipeline").setNumber(0);
     }
 
     public void setReflective() {
-        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(1);
+        NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("pipeline").setNumber(1);
     }
 
     @Override
@@ -45,12 +51,7 @@ public class LimeLight extends SubsystemBase {
         tid = entry_tid.getDouble(0.0);
         getpipe = entry_getpipe.getDouble(0.0);
 
-        DDDx3_data3D = NetworkTableInstance.getDefault().getTable("limelight").getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
-        for (int i=0; i<6; i++) {
-            System.out.print(DDDx3_data3D[i] + ", ");
-        }
-        System.out.println(" ");
-        
+        DDDx3_data3D = NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
     }
 
     @Override

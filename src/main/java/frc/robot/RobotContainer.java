@@ -57,12 +57,12 @@ public class RobotContainer
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
 
-  private final LimeLight m_Limelight = new LimeLight();
+  private final LimeLight m_Limelight = new LimeLight("limelight");
   private final Elevator m_Elevator = new Elevator();
-  private final Dropper m_Dropper = new Dropper();
-  private final CoralOutput m_CoralOutput = new CoralOutput();
-  private final XboxController m_XboxController = new XboxController(2);
+  // private final Dropper m_Dropper = new Dropper();
+  // private final CoralOutput m_CoralOutput = new CoralOutput();
 
+  public XboxController m_XboxController = new XboxController(2);
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
   
@@ -88,16 +88,16 @@ public class RobotContainer
   {
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
-    NamedCommands.registerCommand("DropCoral", // command to drop coral
-      new SequentialCommandGroup( // open the solenoid, wait 2s, the close
-        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)),
-        new ParallelRaceGroup( // wait for 2 secs, lock wheels
-          new WaitCommand(2.0),
-          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
-        ),
-        new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
-      )
-    );
+    // NamedCommands.registerCommand("DropCoral", // command to drop coral
+    //   new SequentialCommandGroup( // open the solenoid, wait 2s, the close
+    //     new InstantCommand(() -> m_CoralOutput.setSolenoid(true)),
+    //     new ParallelRaceGroup( // wait for 2 secs, lock wheels
+    //       new WaitCommand(2.0),
+    //       new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
+    //     ),
+    //     new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
+    //   )
+    // );
       
 
   // Current button layout:
@@ -136,15 +136,15 @@ public class RobotContainer
     // restarts the automatic movement of the elevator
     new JoystickButton(m_XboxController, 10).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
 
-    // take in coral
-    new JoystickButton(m_XboxController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.takeIn()))
-      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+    // // take in coral
+    // new JoystickButton(m_XboxController, 5)
+    //   .whileTrue(new InstantCommand(()-> m_Dropper.takeIn()))
+    //   .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
-    // binds the buttons to output the coral
-    new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
-      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+    // // binds the buttons to output the coral
+    // new JoystickButton(m_XboxController, 6)
+    //   .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
+    //   .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
     new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
     new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
