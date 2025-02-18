@@ -34,6 +34,7 @@ public class CoralOutput extends SubsystemBase {
     // or else it won't do anything and we'll all be super confused for a long time
     private Solenoid m_Solenoid = new Solenoid(PneumaticsModuleType.REVPH, 0);
     
+    // Max 2025: M is a specific instance that is in broadway????
 
 // either set true or false for turning on the solenoid
 // true is on
