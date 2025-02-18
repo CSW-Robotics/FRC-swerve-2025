@@ -13,22 +13,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Cmd_LimeLightTracking;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.CoralOutput;
 import frc.robot.subsystems.Dropper;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -81,11 +86,24 @@ public class RobotContainer
   {
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
+    NamedCommands.registerCommand("DropCoral", // command to drop coral
+      new SequentialCommandGroup( // open the solenoid, wait 2s, the close
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)),
+        new ParallelRaceGroup( // wait for 2 secs, lock wheels
+          new WaitCommand(2.0),
+          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
+        ),
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
+      )
+    );
+      
+
 
     new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
-    new JoystickButton(angle_joystick, 8).onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)));
-    new JoystickButton(angle_joystick, 8).onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
+    new JoystickButton(angle_joystick, 8)
+      .onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)))
+      .onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
 
 
 
@@ -110,22 +128,13 @@ public class RobotContainer
     new JoystickButton(angle_joystick, 3)
       .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+
+    new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_Limelight));
     
 
 
     // a button that moves starts automatic tracking using the limelight
-    new JoystickButton(angle_joystick, 12).whileTrue(new TeleopDrive(
-      drivebase, 
-
-      // maximum x and y values are 25 so we divide by 25
-      ()-> -0.03*(m_Limelight.DDDx3_data3D[2]/25), 
-      ()-> -0.03*(m_Limelight.DDDx3_data3D[0]/25), 
-
-      // this needs to be worked on because I dont know what the values the limelight will give
-      ()-> -0.03*(m_Limelight.DDDx3_data3D[4]/20), 
-      ()-> false
-
-      ));
+    // new JoystickButton(angle_joystick, 12)
 
     // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive
