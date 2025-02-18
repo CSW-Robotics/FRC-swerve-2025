@@ -68,7 +68,7 @@ public class Elevator extends SubsystemBase {
         ShouldMoveAutomatically = false;
 
         // sets the speed to the givin speed
-        motor1.set(speed);
+        motor1.set(-speed);
         motor2.set(speed);
     }
 
@@ -100,7 +100,7 @@ public class Elevator extends SubsystemBase {
             
             if (ShouldMoveAutomatically == true) {
             double motorSpeed = 0.02*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
-            motor1.set(motorSpeed);
+            motor1.set(-motorSpeed);
             motor2.set(motorSpeed);
  
             }

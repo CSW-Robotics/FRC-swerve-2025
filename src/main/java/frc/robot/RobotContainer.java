@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -60,6 +61,7 @@ public class RobotContainer
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
+  private final XboxController m_XboxController = new XboxController(2);
 
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
@@ -98,43 +100,63 @@ public class RobotContainer
     );
       
 
+  // Current button layout:
 
-    new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
+    //  Driver:
 
-    new JoystickButton(angle_joystick, 8)
-      .onTrue(new InstantCommand(() -> m_CoralOutput.setSolenoid(true)))
-      .onFalse(new InstantCommand(() -> m_CoralOutput.setSolenoid(false)));
+        // Left joystick is for drive
+        // Right joystick is for angle
+        // The trigger on the joystick switches turning to robot reletive, with field reletive turning on the knob on top
+        // button 7 on the right joystick resets the gyro
+        // button 12 starts limelight tracking
+      
+    
+    //  Opperater:
+
+        // The left trigger moves the elevator up 
+        // The right trigger moves the elevator down
+        // Button 10 restarts the automatic elevator movement
+        // The left bumper tells the intake to start intaking
+        // the right bumper outputs the coral from the dropper
+        // Button 4 sets the target stage to 3
+        // Button 3 sets the target stage to 2
+        // Button 2 sets the target stage to 2
 
 
 
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
-    new JoystickButton(drive_joystick, 3)
+    new JoystickButton(m_XboxController, 7)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.3)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
-    new JoystickButton(drive_joystick, 2)
+    new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.3)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
     // restarts the automatic movement of the elevator
-    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
+    new JoystickButton(m_XboxController, 10).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
 
     // take in coral
-    new JoystickButton(angle_joystick, 5)
+    new JoystickButton(m_XboxController, 5)
       .whileTrue(new InstantCommand(()-> m_Dropper.takeIn()))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
     // binds the buttons to output the coral
-    new JoystickButton(angle_joystick, 3)
+    new JoystickButton(m_XboxController, 6)
       .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
+    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
+    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
+    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
+
+
+    // a button to start limelight tracking
     new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_Limelight));
     
+    // a button to reset the gyro
+    new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
-
-    // a button that moves starts automatic tracking using the limelight
-    // new JoystickButton(angle_joystick, 12)
 
     // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive
