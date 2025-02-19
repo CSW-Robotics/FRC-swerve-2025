@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 
-// Never Forget: ransomware, siblings, Big "P", hanging limelights, 60 factorial, greenery, and sound effects 
+// Never Forget: ransomware, siblings, Big "P", limelight chandelier, 60 factorial, greenery, and sound effects 
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
