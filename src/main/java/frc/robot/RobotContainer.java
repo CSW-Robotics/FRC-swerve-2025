@@ -91,12 +91,11 @@ public class RobotContainer
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
 // Dropping coral functions:
-// 1st not auto 2nd auto 
+// 1st not auto 2nd auto.
 
 // Drops the coral by opening the solenoid,
 // then waiting for the coral to fall down the ramp
 // then closes the solenoid to reset it.
-
 
 
     // this is for AUTO, and only AUTO. 
