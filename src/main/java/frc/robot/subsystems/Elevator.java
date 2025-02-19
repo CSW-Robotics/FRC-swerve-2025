@@ -38,11 +38,11 @@ public class Elevator extends SubsystemBase {
         motorConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
 
         // Line wrapping
-        motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
+        motor2.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
 
         motorConfig.inverted(true);
-        motor2.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
+        motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
     }
     
