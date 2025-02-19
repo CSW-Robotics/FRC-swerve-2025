@@ -2,6 +2,8 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+// Never Forget: ransomware, siblings, Big "P", hanging limelights, 60 factorial, greenery, and sound effects 
 package frc.robot;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -60,7 +62,7 @@ public class RobotContainer
   private final LimeLight m_Limelight = new LimeLight("limelight");
   private final Elevator m_Elevator = new Elevator();
   // private final Dropper m_Dropper = new Dropper();
-  // private final CoralOutput m_CoralOutput = new CoralOutput();
+  private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public XboxController m_XboxController = new XboxController(2);
   public Joystick drive_joystick = new Joystick(0);
@@ -88,48 +90,60 @@ public class RobotContainer
   {
     NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
-    // NamedCommands.registerCommand("DropCoral", // command to drop coral
-    //   new SequentialCommandGroup( // open the solenoid, wait 2s, the close
-    //     new InstantCommand(() -> m_CoralOutput.setSolenoid(true)),
-    //     new ParallelRaceGroup( // wait for 2 secs, lock wheels
-    //       new WaitCommand(2.0),
-    //       new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
-    //     ),
-    //     new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
-    //   )
-    // );
+// Dropping coral functions:
+// 1st not auto 2nd auto 
+
+// Drops the coral by opening the solenoid,
+// then waiting for the coral to fall down the ramp
+// then closes the solenoid to reset it.
+
+
+
+    // this is for AUTO, and only AUTO. 
+    // it is fundamentally the same as the code below assigned to the x button
+    NamedCommands.registerCommand("DropCoral", // command to drop coral
+
+      new SequentialCommandGroup( // open the solenoid, wait 2s, the close
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // opens the solenoid
+
+        new ParallelRaceGroup( // wait for 2 secs, lock wheels
+          new WaitCommand(2.0),
+          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
+          // we lock the wheels or otherwise they continue to spin which causes problems,
+          // since this ability works best only with a stational robot
+        ),
+
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(false)) // closes the solenoid
+      )
+
+    );
       
+new JoystickButton(m_XboxController, 9)
+    .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
+    .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.03)));
 
-  // Current button layout:
 
-    //  Driver:
-
-        // Left joystick is for drive
-        // Right joystick is for angle
-        // The trigger on the joystick switches turning to robot reletive, with field reletive turning on the knob on top
-        // button 7 on the right joystick resets the gyro
-        // button 12 starts limelight tracking
+// For the X BUTTON:
+    new JoystickButton(m_XboxController, 1).onTrue(new SequentialCommandGroup(
       
-    
-    //  Opperater:
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // Turns on the solenoid, which retracts it
+        new ParallelRaceGroup( 
+          new WaitCommand(2.0), // wait for 2 secs 
+          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ) // and also lock the wheels
+          // we lock the wheels or otherwise they continue to spin which causes problems,
+          // since this ability works best only with a stational robot
 
-        // The left trigger moves the elevator up 
-        // The right trigger moves the elevator down
-        // Button 10 restarts the automatic elevator movement
-        // The left bumper tells the intake to start intaking
-        // the right bumper outputs the coral from the dropper
-        // Button 4 sets the target stage to 3
-        // Button 3 sets the target stage to 2
-        // Button 2 sets the target stage to 2
-
+        ),
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(false)) // Then extends it again, which completes the cycle
+      ));
 
 
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
-    new JoystickButton(m_XboxController, 7)
+    new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
-    new JoystickButton(m_XboxController, 8)
+    new JoystickButton(m_XboxController, 7)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
@@ -146,9 +160,9 @@ public class RobotContainer
     //   .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
     //   .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
-    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
-    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
-    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
+    // new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
+    // new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
+    // new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
 
 
     // a button to start limelight tracking
