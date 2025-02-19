@@ -31,7 +31,7 @@ public class ExampleSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // WPILIB MUST HAVE - this method will be called once per scheduler run - 20ms
+    //this method will be called once per scheduler run - 20ms
 
     System.out.println(test_motor.getEncoder().getVelocity()); // print motor velocity
     System.out.println(test_input.get()); // print state of DigitalInput
@@ -39,6 +39,6 @@ public class ExampleSubsystem extends SubsystemBase {
 
   @Override
   public void simulationPeriodic() {
-    // WPILIB MUST HAVE - this method will be called once per scheduler run during simulation
+    //this method will be called once per scheduler run during simulation
   }
 }

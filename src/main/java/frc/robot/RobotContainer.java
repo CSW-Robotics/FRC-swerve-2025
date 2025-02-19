@@ -126,11 +126,11 @@ public class RobotContainer
 
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
     new JoystickButton(m_XboxController, 7)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.3)))
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
     new JoystickButton(m_XboxController, 8)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.3)))
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
 
     // restarts the automatic movement of the elevator

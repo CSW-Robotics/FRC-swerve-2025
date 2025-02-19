@@ -40,6 +40,8 @@ public class Elevator extends SubsystemBase {
         // Line wrapping
         motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
+
+        motorConfig.inverted(true);
         motor2.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
     }
