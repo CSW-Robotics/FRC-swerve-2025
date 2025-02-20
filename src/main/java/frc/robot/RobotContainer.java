@@ -67,6 +67,9 @@ public class RobotContainer
   public XboxController m_XboxController = new XboxController(2);
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
+
+  // change this to change the auto
+  public String set_auto = "Test Auto";
   
  
   /**
@@ -161,7 +164,7 @@ new JoystickButton(m_XboxController, 9)
 
     // new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
     // new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
-    // new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
+    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
 
 
     // a button to start limelight tracking
@@ -208,7 +211,7 @@ new JoystickButton(m_XboxController, 9)
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("Test Auto");
+    return drivebase.getAutonomousCommand(set_auto);
 
   }
 

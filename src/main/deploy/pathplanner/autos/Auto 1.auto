@@ -34,6 +34,12 @@
           "data": {
             "pathName": "goto coral"
           }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropCoral"
+          }
         }
       ]
     }
