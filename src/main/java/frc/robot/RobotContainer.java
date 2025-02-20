@@ -123,8 +123,8 @@ new JoystickButton(m_XboxController, 9)
 
 
 // For the X BUTTON:
-    new JoystickButton(m_XboxController, 1).onTrue(new SequentialCommandGroup(
-      
+    new JoystickButton(m_XboxController, 1).onTrue(
+      new SequentialCommandGroup(
         new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // Turns on the solenoid, which retracts it
         new ParallelRaceGroup( 
           new WaitCommand(2.0), // wait for 2 secs 
