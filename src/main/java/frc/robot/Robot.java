@@ -24,11 +24,7 @@ public class Robot extends TimedRobot
   private        Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
   private Timer disabledTimer;
-
-  //5347 edits here
-  DigitalInput m_limitswitch = new DigitalInput(7);
 
   public Robot()
   {
@@ -94,7 +90,6 @@ public class Robot extends TimedRobot
   @Override
   public void robotPeriodic()
   {
-    //System.out.println(m_limitswitch.get());
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
