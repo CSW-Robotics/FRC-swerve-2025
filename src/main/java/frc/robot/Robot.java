@@ -41,15 +41,10 @@ public class Robot extends TimedRobot
   /**
    * This function is run when the robot is first started up and should be used for any initialization code.
    */
-  private Rev2mDistanceSensor distOnboard; 
 
   @Override
   public void robotInit()
   {
-    // Its a sensor
-    distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
-    distOnboard.setAutomaticMode(true);
-    distOnboard.setDistanceUnits(Unit.kMillimeters);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();

@@ -12,8 +12,10 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -48,9 +50,12 @@ public class Elevator extends SubsystemBase {
     
     // DititalInput.get returns true or false for each limit switch on and off respectively
     // Define 4 limit switches to start, as adding all 8 might be too complex
+    public Rev2mDistanceSensor distOnboard;
     DigitalInput limitSwitch1 = new DigitalInput(1);
     DigitalInput limitSwitch2 = new DigitalInput(2);
     DigitalInput limitSwitch3 = new DigitalInput(3);
+
+    
 
     // integer type variables for later use which should not be changeable outside of this class
     protected int currentStage = 0;
@@ -59,6 +64,15 @@ public class Elevator extends SubsystemBase {
     boolean ShouldMoveAutomatically = true;
 
     protected int sensor_distance;
+
+    public Elevator(){
+
+            // Its a sensor
+        distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
+        distOnboard.setAutomaticMode(true);
+        distOnboard.setDistanceUnits(Unit.kMillimeters);
+        
+    }
 
     public void ChangeTargetStage(int newtargetStage) {
         // Set targetStage to the newtargetStage to remember our new target: This target will be 
