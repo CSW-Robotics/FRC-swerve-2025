@@ -171,7 +171,7 @@ new JoystickButton(m_XboxController, 9)
     new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_Limelight));
     
     // a button to reset the gyro
-    new JoystickButton(angle_joystick, 7).onTrue(new InstantCommand(drivebase::zeroGyro) );
+    new JoystickButton(angle_joystick, 8).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
 
     // absolute drive that switches to robot relative
