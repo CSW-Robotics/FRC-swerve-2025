@@ -12,47 +12,47 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class Dropper extends SubsystemBase {
 
-    private SparkMax dropper_motor = new SparkMax(0, MotorType.kBrushless);
-    private DigitalInput coral_in = new DigitalInput(0);
+    private SparkMax m_Dropper = new SparkMax(42, MotorType.kBrushless);
+    // private DigitalInput coral_in = new DigitalInput(0);
 
     private SparkMaxConfig spark_config = new SparkMaxConfig();
 
   public Dropper() {
     spark_config.idleMode(SparkBaseConfig.IdleMode.kBrake);
-    dropper_motor.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+    m_Dropper.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
   }
 
-  // demonstrative method that returns the state of the digital input
-  public boolean getInput() { 
-    // gets t/f for limit switch
-    return coral_in.get();
-  }
+  // // demonstrative method that returns the state of the digital input
+  // public boolean getInput() { 
+  //   // gets t/f for limit switch
+  //   return coral_in.get();
+  // }
 
 //set the motor speed
   public void setMotor(double speed) {
     // sets motors to speed
-    dropper_motor.set(speed);
+    m_Dropper.set(speed);
     }
 
-  public void takeIn() {
-    // method run when taking in coral, runs motors until limit switch is true
-    if (getInput() == false) {
-      setMotor(.05);
-    }
-    if (getInput() == true) {
-      setMotor(0.0);
-    }
-  }
+  // public void takeIn() {
+  //   // method run when taking in coral, runs motors until limit switch is true
+  //   if (getInput() == false) {
+  //     setMotor(.05);
+  //   }
+  //   if (getInput() == true) {
+  //     setMotor(0.0);
+  //   }
+  // }
 
-  public void pushOut() {
-    // method run when pushing coral out, runs motors until limit switch is false
-    if (getInput() == true) {
-      setMotor(.05);
-    }
-    if (getInput() == false) {
-      setMotor(0.0);
-    }
-  }
+  // public void pushOut() {
+  //   // method run when pushing coral out, runs motors until limit switch is false
+  //   if (getInput() == true) {
+  //     setMotor(.05);
+  //   }
+  //   if (getInput() == false) {
+  //     setMotor(0.0);
+  //   }
+  // }
 
   @Override
   public void periodic() {}

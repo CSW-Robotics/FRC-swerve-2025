@@ -61,7 +61,7 @@ public class RobotContainer
 
   private final LimeLight m_Limelight = new LimeLight("limelight");
   private final Elevator m_Elevator = new Elevator();
-  // private final Dropper m_Dropper = new Dropper();
+  private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public XboxController m_XboxController = new XboxController(2);
@@ -122,7 +122,7 @@ public class RobotContainer
       
 new JoystickButton(m_XboxController, 9)
     .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-    .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.03)));
+    .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.0)));
 
 
 // For the X BUTTON:
@@ -143,11 +143,11 @@ new JoystickButton(m_XboxController, 9)
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
     new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.1)));
 
     new JoystickButton(m_XboxController, 7)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0)));
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
 
     // restarts the automatic movement of the elevator
     new JoystickButton(m_XboxController, 10).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
@@ -157,10 +157,10 @@ new JoystickButton(m_XboxController, 9)
     //   .whileTrue(new InstantCommand(()-> m_Dropper.takeIn()))
     //   .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
-    // // binds the buttons to output the coral
-    // new JoystickButton(m_XboxController, 6)
-    //   .whileTrue(new InstantCommand(()-> m_Dropper.pushOut()))
-    //   .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+    // binds the buttons to output the coral
+    new JoystickButton(m_XboxController, 6)
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
+      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
     // new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
     // new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
