@@ -48,7 +48,6 @@ public class Elevator extends SubsystemBase {
     
     // DititalInput.get returns true or false for each limit switch on and off respectively
     // Define 4 limit switches to start, as adding all 8 might be too complex
-    DigitalInput limitSwitch0 = new DigitalInput(0); 
     DigitalInput limitSwitch1 = new DigitalInput(1);
     DigitalInput limitSwitch2 = new DigitalInput(2);
     DigitalInput limitSwitch3 = new DigitalInput(3);
@@ -58,6 +57,8 @@ public class Elevator extends SubsystemBase {
     protected int targetStage = 0;
 
     boolean ShouldMoveAutomatically = true;
+
+    protected int sensor_distance;
 
     public void ChangeTargetStage(int newtargetStage) {
         // Set targetStage to the newtargetStage to remember our new target: This target will be 
@@ -76,7 +77,25 @@ public class Elevator extends SubsystemBase {
 
     public void RestartAutoMovement() {
         ShouldMoveAutomatically = true;
+
+
+        // if we dont do this the elevator could get stuck in bettween stages when we restart but are half way in between a stage.
+
+        if (currentStage != 0){
+
+            targetStage = currentStage - 1;
+            MoveTo();
+
+        }
+
+        else {
+
+            targetStage = currentStage + 1;
+            MoveTo();
+
+        }
     }
+    
 
     public int Direction(){
         // Gives us the current direction based off of the target stage
@@ -100,19 +119,33 @@ public class Elevator extends SubsystemBase {
             // it travels faster when farther away, and slower when the difference approaches 0 
             //double motorSpeed = (0.08*Direction())/(4-Math.abs(currentStage-targetStage));
             
+            if (distOnboard.get() > 500){
+
+                sensor_distance = 500;
+
+            }
+
+            else if (distOnboard.get() < 500){
+
+                sensor_distance = distOnboard.get();
+
+            }
+
+
             if (ShouldMoveAutomatically == true) {
+
             double motorSpeed = 0.02*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
-            motor1.set(motorSpeed);
-            motor2.set(motorSpeed);
+            motor1.set((motorSpeed)/(500-sensor_distance));
+            motor2.set((motorSpeed)/(500-sensor_distance));
  
             }
+
     }
 
     @Override
     public void periodic(){
         // This funcion should run every 20 MSEC
         // store the input of each limit switch using boolean variables
-        boolean limitSwitch0Input = limitSwitch0.get();
         boolean limitSwitch1Input = limitSwitch1.get();
         boolean limitSwitch2Input = limitSwitch2.get();
         boolean limitSwitch3Input = limitSwitch3.get();
@@ -121,10 +154,11 @@ public class Elevator extends SubsystemBase {
 
         // 1. Check whether the sensors have been activated to see if we need to update currentStage
             // Will the limit switches be regularly open or closed? 
-        if (limitSwitch0Input == activeValue){
+        if (distOnboard.get() < 200){
             // The elevator is at stage 0
             // update currentStage to reflect this
             currentStage = 0; // Is this different from "currentStage = targetStage?"
+
         }
         else if (limitSwitch1Input == activeValue){
             // The elevator is at stage 1
