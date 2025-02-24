@@ -150,9 +150,19 @@ public class Elevator extends SubsystemBase {
             if (ShouldMoveAutomatically == true) {
 
             double motorSpeed = 0.02*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
+            
+            if (Direction() == -1){
             motor1.set((motorSpeed)/(70-sensor_distance));
             motor2.set((motorSpeed)/(70-sensor_distance));
  
+            }
+
+            else {
+
+                motor1.set(motorSpeed);
+                motor2.set(motorSpeed);
+
+            }
             }
 
     }
