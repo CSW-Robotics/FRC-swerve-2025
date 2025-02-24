@@ -3,6 +3,10 @@ package frc.robot.subsystems;
 import static edu.wpi.first.units.Units.derive;
 
 import org.dyn4j.collision.narrowphase.DistanceDetector;
+
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
+import com.revrobotics.Rev2mDistanceSensor.Unit;
 import com.revrobotics.sim.SparkLimitSwitchSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLimitSwitch;
@@ -12,10 +16,8 @@ import com.revrobotics.spark.config.LimitSwitchConfig;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,6 +30,8 @@ public class Elevator extends SubsystemBase {
     SparkMax motor1 = new SparkMax(13, MotorType.kBrushless);
     // One of them will need to be inverted.
     SparkMax motor2 = new SparkMax(9, MotorType.kBrushless);
+
+    public Rev2mDistanceSensor distOnboard;
     
     // We only need one motor configuration, as we can set both motors to the same configuration
     SparkMaxConfig motorConfig = new SparkMaxConfig();
@@ -46,11 +50,17 @@ public class Elevator extends SubsystemBase {
         motorConfig.inverted(true);
         motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
+
+        
+        // Its a sensor
+        distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
+        distOnboard.setAutomaticMode(true);
+        distOnboard.setDistanceUnits(Unit.kMillimeters);
+            
     }
     
     // DititalInput.get returns true or false for each limit switch on and off respectively
     // Define 4 limit switches to start, as adding all 8 might be too complex
-    public Rev2mDistanceSensor distOnboard;
     DigitalInput limitSwitch1 = new DigitalInput(1);
     DigitalInput limitSwitch2 = new DigitalInput(2);
     DigitalInput limitSwitch3 = new DigitalInput(3);
@@ -63,16 +73,7 @@ public class Elevator extends SubsystemBase {
 
     boolean ShouldMoveAutomatically = true;
 
-    protected int sensor_distance;
-
-    public Elevator(){
-
-            // Its a sensor
-        distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
-        distOnboard.setAutomaticMode(true);
-        distOnboard.setDistanceUnits(Unit.kMillimeters);
-        
-    }
+    protected double sensor_distance;
 
     public void ChangeTargetStage(int newtargetStage) {
         // Set targetStage to the newtargetStage to remember our new target: This target will be 
@@ -133,15 +134,15 @@ public class Elevator extends SubsystemBase {
             // it travels faster when farther away, and slower when the difference approaches 0 
             //double motorSpeed = (0.08*Direction())/(4-Math.abs(currentStage-targetStage));
             
-            if (distOnboard.get() > 50){
+            if (distOnboard.getRange() > 50){
 
                 sensor_distance = 50;
 
             }
 
-            else if (distOnboard.get() < 50){
+            else if (distOnboard.getRange() < 50){
 
-                sensor_distance = distOnboard.get();
+                sensor_distance = distOnboard.getRange();
 
             }
 
@@ -168,7 +169,7 @@ public class Elevator extends SubsystemBase {
 
         // 1. Check whether the sensors have been activated to see if we need to update currentStage
             // Will the limit switches be regularly open or closed? 
-        if (distOnboard.get() < 50){
+        if (distOnboard.getRange() < 50){
             // The elevator is at stage 0
             // update currentStage to reflect this
             currentStage = 0; // Is this different from "currentStage = targetStage?"
