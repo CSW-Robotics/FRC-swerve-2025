@@ -120,13 +120,8 @@ public class RobotContainer
 
     );
       
-new JoystickButton(m_XboxController, 9)
-    .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-    .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.0)));
 
-
-// For the X BUTTON:
-    new JoystickButton(m_XboxController, 1).onTrue(
+    new JoystickButton(m_XboxController, 9).onTrue(
       new SequentialCommandGroup(
         new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // Turns on the solenoid, which retracts it
         new ParallelRaceGroup( 
@@ -143,7 +138,7 @@ new JoystickButton(m_XboxController, 9)
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
     new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.1)));
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
 
     new JoystickButton(m_XboxController, 7)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
@@ -162,10 +157,10 @@ new JoystickButton(m_XboxController, 9)
       .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
-    // new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
-    // new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
+    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
+    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
     new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
-
+    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()-> m_Elevator.ChangeTargetStage(0)));
 
     // a button to start limelight tracking
     new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_Limelight));
