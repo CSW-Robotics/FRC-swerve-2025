@@ -95,7 +95,7 @@ public class Elevator extends SubsystemBase {
 
         }
     }
-    
+
 
     public int Direction(){
         // Gives us the current direction based off of the target stage
@@ -119,13 +119,13 @@ public class Elevator extends SubsystemBase {
             // it travels faster when farther away, and slower when the difference approaches 0 
             //double motorSpeed = (0.08*Direction())/(4-Math.abs(currentStage-targetStage));
             
-            if (distOnboard.get() > 500){
+            if (distOnboard.get() > 50){
 
-                sensor_distance = 500;
+                sensor_distance = 50;
 
             }
 
-            else if (distOnboard.get() < 500){
+            else if (distOnboard.get() < 50){
 
                 sensor_distance = distOnboard.get();
 
@@ -135,8 +135,8 @@ public class Elevator extends SubsystemBase {
             if (ShouldMoveAutomatically == true) {
 
             double motorSpeed = 0.02*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
-            motor1.set((motorSpeed)/(500-sensor_distance));
-            motor2.set((motorSpeed)/(500-sensor_distance));
+            motor1.set((motorSpeed)/(50-sensor_distance));
+            motor2.set((motorSpeed)/(50-sensor_distance));
  
             }
 
@@ -154,7 +154,7 @@ public class Elevator extends SubsystemBase {
 
         // 1. Check whether the sensors have been activated to see if we need to update currentStage
             // Will the limit switches be regularly open or closed? 
-        if (distOnboard.get() < 200){
+        if (distOnboard.get() < 50){
             // The elevator is at stage 0
             // update currentStage to reflect this
             currentStage = 0; // Is this different from "currentStage = targetStage?"
