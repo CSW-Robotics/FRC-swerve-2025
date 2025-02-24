@@ -5,7 +5,7 @@ Driver:
     Left joystick is for drive
     Right joystick is for angle
     The trigger on the joystick switches turning to robot reletive, with field reletive turning on the knob on top
-    button 8 on the right joystick resets the gyro
+    button 3 on the left joystick resets the gyro
     button 12 starts limelight tracking
     
 
