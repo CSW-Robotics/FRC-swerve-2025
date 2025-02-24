@@ -4,10 +4,10 @@ test bot
 
 turn limelight around since we got rid of one & wire it in
 cam for seeing
-write auto seletor for smart dashboard/ web compaounts
+write auto seletor for smart dashboard/ web components
 
 
-code secosnd limelight, might not be for march 7th comp
+code second limelight, might not be for march 7th comp
 
 2/24:
 
