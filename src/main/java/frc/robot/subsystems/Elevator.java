@@ -136,7 +136,7 @@ public class Elevator extends SubsystemBase {
             
             if (distOnboard.getRange() > 70){
 
-                sensor_distance = 70;
+                sensor_distance = 69;
 
             }
 
