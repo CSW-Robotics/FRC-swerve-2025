@@ -91,7 +91,7 @@ public class RobotContainer
     for (File i_file : files_in_deploy_folder) {
       if (i_file.isFile()) {
         System.out.println(i_file.getName());
-        //m_chooser.addOption(i_file.getName(), i_file.getName());
+        m_chooser.addOption(i_file.getName(), i_file.getName());
       }
     }
     // put it on SmartDashboard
@@ -163,15 +163,11 @@ public class RobotContainer
     // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
     new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.01)));
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
 
     new JoystickButton(m_XboxController, 7)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.01)));
-
-    // restarts the automatic movement of the elevator
-    new JoystickButton(m_XboxController, 10).onTrue(new InstantCommand(()-> m_Elevator.RestartAutoMovement()));
-
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
     
     // binds the buttons to output the coral
     new JoystickButton(m_XboxController, 6)

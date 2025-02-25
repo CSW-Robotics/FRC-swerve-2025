@@ -70,12 +70,13 @@ public class Elevator extends SubsystemBase {
     // integer type variables for later use which should not be changeable outside of this class
     protected int currentStage = 0;
     protected int targetStage = 0;
+    protected double sensor_distance;
 
     boolean ShouldMoveAutomatically = true;
 
-    protected double sensor_distance;
 
     public void ChangeTargetStage(int newtargetStage) {
+        RestartAutoMovement();
         // Set targetStage to the newtargetStage to remember our new target: This target will be 
         // passed in when calling this method 
         targetStage = newtargetStage;    
@@ -92,36 +93,19 @@ public class Elevator extends SubsystemBase {
 
     public void RestartAutoMovement() {
         ShouldMoveAutomatically = true;
-
-
-        // if we dont do this the elevator could get stuck in bettween stages when we restart but are half way in between a stage.
-
-        // if (currentStage != 0){
-
-        //     targetStage = currentStage - 1;
-        //     MoveTo();
-
-        // }
-
-        // else {
-
-        //     targetStage = currentStage + 1;
-        //     MoveTo();
-
-        // }
     }
 
 
-    public int Direction(){
+    public double Direction(){
         // Gives us the current direction based off of the target stage
             if (currentStage > targetStage){
-                return -1; // Go down
+                return -0.7; // Go down
             }
             else if (currentStage < targetStage){
                 return 1; // Go up
             }
             else{
-                return 0; //stay in place 
+                return 0.2; //stay in place 
             }
     }
     
