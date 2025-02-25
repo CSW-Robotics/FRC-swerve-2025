@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -41,6 +42,8 @@ import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.concurrent.PriorityBlockingQueue;
 
 import javax.naming.PartialResultException;
@@ -68,8 +71,9 @@ public class RobotContainer
   public Joystick drive_joystick = new Joystick(0);
   public Joystick angle_joystick = new Joystick(1);
 
-  // change this to change the auto
-  public String set_auto = "Test Auto";
+  // auto picker
+  private static final String default_auto = "Test Auto";
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
   
  
   /**
@@ -77,7 +81,26 @@ public class RobotContainer
    */
   public RobotContainer()
   {
-    //regaster pathplanner commands here
+
+    // get all the files in the pathplanner/autos dir
+    File[] files_in_deploy_folder = new File(
+      Filesystem.getDeployDirectory(),"pathplanner/autos").listFiles((dir, name) -> name.endsWith(".auto")
+    );
+    
+    // and then add them to a list
+    for (File i_file : files_in_deploy_folder) {
+      if (i_file.isFile()) {
+        System.out.println(i_file.getName());
+        //m_chooser.addOption(i_file.getName(), i_file.getName());
+      }
+    }
+    // put it on SmartDashboard
+    m_chooser.setDefaultOption("Test Auto", default_auto);
+    SmartDashboard.putData("Auto Chooser", m_chooser);
+    
+    
+    
+
     configureBindings();
 
   }
@@ -205,7 +228,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand(set_auto);
+    return drivebase.getAutonomousCommand(m_chooser.getSelected());
 
   }
 
