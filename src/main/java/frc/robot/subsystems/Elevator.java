@@ -68,9 +68,10 @@ public class Elevator extends SubsystemBase {
     
 
     // integer type variables for later use which should not be changeable outside of this class
-    protected int currentStage = 0;
+    protected double currentStage = 0;
     protected int targetStage = 0;
-    protected double sensor_distance;
+    protected double sensorDistance;
+    protected double overideSpeed;
 
     boolean ShouldMoveAutomatically = true;
 
@@ -85,10 +86,12 @@ public class Elevator extends SubsystemBase {
     public void SetMotor(double speed){
         // stops the automatic movement
         ShouldMoveAutomatically = false;
+        overideSpeed = speed;
 
         // sets the speed to the givin speed
         motor1.set(speed);
         motor2.set(speed);
+
     }
 
     public void RestartAutoMovement() {
@@ -111,22 +114,17 @@ public class Elevator extends SubsystemBase {
     
    
     public void MoveTo(){
-            // Move to the target stage by adjusting the motor speeds given the direction
-
-            // we multiply the motor starting speed by direction because direction is either 1,-1, or 0 
-            // afterwards, divide by 4 - the absolute value of the difference of the stages
-            // it travels faster when farther away, and slower when the difference approaches 0 
-            //double motorSpeed = (0.08*Direction())/(4-Math.abs(currentStage-targetStage));
             
+
             if (distOnboard.getRange() > 70){
 
-                sensor_distance = 69;
+                sensorDistance = 69;
 
             }
 
             else if (distOnboard.getRange() < 70){
 
-                sensor_distance = distOnboard.getRange();
+                sensorDistance = distOnboard.getRange();
 
             }
 
@@ -136,8 +134,8 @@ public class Elevator extends SubsystemBase {
             double motorSpeed = 0.2*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
             
             if (Direction() == -1){
-            motor1.set((motorSpeed)/(70-sensor_distance));
-            motor2.set((motorSpeed)/(70-sensor_distance));
+            motor1.set((motorSpeed)/(70-sensorDistance));
+            motor2.set((motorSpeed)/(70-sensorDistance));
  
             }
 
@@ -151,8 +149,8 @@ public class Elevator extends SubsystemBase {
 
     }
 
-    @Override
-    public void periodic(){
+    public void CheckStage(){
+
         // This funcion should run every 20 MSEC
         // store the input of each limit switch using boolean variables
         boolean limitSwitch1Input = limitSwitch1.get();
@@ -186,10 +184,25 @@ public class Elevator extends SubsystemBase {
             //System.out.println("The elevator is between limit switches or an error has occured");
         }
 
+        if (currentStage % 1 == 0 && ShouldMoveAutomatically == false) { // if the current stage is an int and we are overidding the movement
 
+            // if we are going down, set the current stage to half a level down
+            if (overideSpeed < 0){
+                currentStage += -0.5;
+            }
 
-        // 2. Run moveTo function that just sets motor speed in the correct direction
-        //    towards our destination
+            // if we are going up, set the current stage to half a level up
+            else if (overideSpeed > 0 && overideSpeed != 0.04){
+                currentStage += 0.5;
+            }
+        }
+
+    }
+
+    @Override
+    public void periodic(){
+
+        CheckStage();
         MoveTo();
         
     }
