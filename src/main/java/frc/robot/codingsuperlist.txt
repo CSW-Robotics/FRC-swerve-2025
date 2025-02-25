@@ -4,7 +4,6 @@ test bot
 
 turn limelight around since we got rid of one & wire it in
 cam for seeing
-write auto seletor for smart dashboard/ web components
 
 
 code second limelight, might not be for march 7th comp
@@ -15,6 +14,5 @@ last three levels of the sensors.
 limelight tracking works?
 problem: elevator going up after movement stopped.
 
-make button for sucking back in
 speed up dropper motor
 fix elevator
