@@ -32,8 +32,6 @@ public class Elevator extends SubsystemBase {
     SparkMax motor2 = new SparkMax(9, MotorType.kBrushless);
 
     public Rev2mDistanceSensor distOnboard;
-
-    // testing the computer
     
     // We only need one motor configuration, as we can set both motors to the same configuration
     SparkMaxConfig motorConfig = new SparkMaxConfig();
