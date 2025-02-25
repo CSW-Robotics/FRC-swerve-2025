@@ -53,10 +53,4 @@ public class Dropper extends SubsystemBase {
   //     setMotor(0.0);
   //   }
   // }
-
-  @Override
-  public void periodic() {}
-
-  @Override
-  public void simulationPeriodic() {} 
 }
