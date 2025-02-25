@@ -1,18 +1,7 @@
-test bot
-    mount mag sensors
-    see if limelight tracking works
-
+mount mags
 turn limelight around since we got rid of one & wire it in
 cam for seeing
 
-
 code second limelight, might not be for march 7th comp
 
-2/24:
-
-last three levels of the sensors.
 limelight tracking works?
-problem: elevator going up after movement stopped.
-
-speed up dropper motor
-fix elevator
