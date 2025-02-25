@@ -96,19 +96,19 @@ public class Elevator extends SubsystemBase {
 
         // if we dont do this the elevator could get stuck in bettween stages when we restart but are half way in between a stage.
 
-        if (currentStage != 0){
+        // if (currentStage != 0){
 
-            targetStage = currentStage - 1;
-            MoveTo();
+        //     targetStage = currentStage - 1;
+        //     MoveTo();
 
-        }
+        // }
 
-        else {
+        // else {
 
-            targetStage = currentStage + 1;
-            MoveTo();
+        //     targetStage = currentStage + 1;
+        //     MoveTo();
 
-        }
+        // }
     }
 
 
@@ -149,7 +149,7 @@ public class Elevator extends SubsystemBase {
 
             if (ShouldMoveAutomatically == true) {
 
-            double motorSpeed = 0.02*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
+            double motorSpeed = 0.2*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
             
             if (Direction() == -1){
             motor1.set((motorSpeed)/(70-sensor_distance));
