@@ -62,7 +62,9 @@ public class RobotContainer
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
 
-  private final LimeLight m_Limelight = new LimeLight("limelight");
+  private final LimeLight m_backLimelight = new LimeLight("limelight");
+  private final LimeLight m_frontLimelight = new LimeLight("limelight-front");
+
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
@@ -187,7 +189,7 @@ public class RobotContainer
 
 
     // a button to start limelight tracking
-    new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_Limelight));
+    new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_backLimelight));
     
     // a button to reset the gyro
     new JoystickButton(drive_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
