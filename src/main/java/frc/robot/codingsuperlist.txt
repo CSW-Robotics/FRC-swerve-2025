@@ -1,4 +1,3 @@
-mount mags
 turn limelight around since we got rid of one & wire it in
 cam for seeing
 
