@@ -90,8 +90,10 @@ public class RobotContainer
     // and then add them to a list
     for (File i_file : files_in_deploy_folder) {
       if (i_file.isFile()) {
-        System.out.println(i_file.getName());
-        m_chooser.addOption(i_file.getName(), i_file.getName());
+        m_chooser.addOption( // add option to SmartDashboard
+          i_file.getName().substring(0, i_file.getName().lastIndexOf(".")), // removed .auto
+          i_file.getName().substring(0, i_file.getName().lastIndexOf("."))
+        );
       }
     }
     // put it on SmartDashboard
@@ -99,8 +101,7 @@ public class RobotContainer
     SmartDashboard.putData("Auto Chooser", m_chooser);
     
     
-    
-
+    // set up buttons and commands
     configureBindings();
 
   }
