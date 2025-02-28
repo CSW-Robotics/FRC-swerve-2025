@@ -1,5 +1,20 @@
-turn limelight around since we got rid of one & wire it in
+Main priority:
 
-code second limelight, might not be for march 7th comp
+    Make sure swerve works
 
-limelight tracking works?
+    mount elevator magnetic limit switch sensor sensors
+
+    mount distance sensor on elevator for intake
+
+    code second limelight, might not be for march 7th comp
+
+    limelight tracking works?
+
+    Auto with limelight
+
+
+
+
+In spare time:
+
+    More auto paths

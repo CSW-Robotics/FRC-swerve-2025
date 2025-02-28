@@ -4,7 +4,7 @@ Driver:
 
     Left joystick is for drive
     Right joystick is for angle
-    The trigger on the joystick switches turning to robot reletive, with field reletive turning on the knob on top
+    The trigger on the right joystick switches turning to robot reletive, with field reletive turning on the knob on top
     button 3 on the left joystick resets the gyro
     button 12 starts limelight tracking
     
@@ -13,11 +13,15 @@ Opperater:
 
     The left trigger moves the elevator down 
     The right trigger moves the elevator up
-    Button 10 (START) restarts the automatic elevator movement
     Button 9 (BACK) opens the solonoids like during auto
-    The left bumper tells the intake to start intaking
-    the right bumper outputs the coral from the dropper
+    The right bumper pushes the coral out
+    The left bumper pulls the coral in
     Button 4 (yellow Y) sets the target stage to 3
     Button 3 (red B) sets the target stage to 2
     Button 2 (green A) sets the target stage to 1
     Button 1 (blue X) sets the target stage to the bottem for coral intake
+
+                                        **IMPORTANT**
+    The Y, B, X, and A buttons restart the automatic movement of the elevator when you press them
+
+    The BACK button opens the solonoids for 3 seconds you cannot interupt it

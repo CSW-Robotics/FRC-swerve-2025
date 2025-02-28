@@ -61,6 +61,7 @@ public class Elevator extends SubsystemBase {
     
     // DititalInput.get returns true or false for each limit switch on and off respectively
     // Define 4 limit switches to start, as adding all 8 might be too complex
+    DigitalInput limitSwitch0 = new DigitalInput(0);
     DigitalInput limitSwitch1 = new DigitalInput(1);
     DigitalInput limitSwitch2 = new DigitalInput(2);
     DigitalInput limitSwitch3 = new DigitalInput(3);
@@ -70,7 +71,6 @@ public class Elevator extends SubsystemBase {
     // integer type variables for later use which should not be changeable outside of this class
     protected double currentStage = 0;
     protected int targetStage = 0;
-    protected double sensorDistance;
     protected double overideSpeed;
 
     boolean ShouldMoveAutomatically = true;
@@ -115,36 +115,12 @@ public class Elevator extends SubsystemBase {
    
     public void MoveTo(){
             
-
-            if (distOnboard.getRange() > 70){
-
-                sensorDistance = 69;
-
-            }
-
-            else if (distOnboard.getRange() < 70){
-
-                sensorDistance = distOnboard.getRange();
-
-            }
-
-
             if (ShouldMoveAutomatically == true) {
 
-            double motorSpeed = 0.2*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
-            
-            if (Direction() == -1){
-            motor1.set((motorSpeed)/(70-sensorDistance));
-            motor2.set((motorSpeed)/(70-sensorDistance));
- 
-            }
-
-            else {
+                double motorSpeed = 0.2*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
 
                 motor1.set(motorSpeed);
                 motor2.set(motorSpeed);
-
-            }
             }
 
     }
@@ -153,20 +129,18 @@ public class Elevator extends SubsystemBase {
 
         // This funcion should run every 20 MSEC
         // store the input of each limit switch using boolean variables
+        boolean limitSwitch0Input = limitSwitch0.get();
         boolean limitSwitch1Input = limitSwitch1.get();
         boolean limitSwitch2Input = limitSwitch2.get();
         boolean limitSwitch3Input = limitSwitch3.get();
         
         boolean activeValue = false;        // the limit switch outputs false when it detects the magnet
 
-        // 1. Check whether the sensors have been activated to see if we need to update currentStage
-            // Will the limit switches be regularly open or closed? 
-        if (distOnboard.getRange() < 70){
-            // The elevator is at stage 0
-            // update currentStage to reflect this
-            currentStage = 0; // Is this different from "currentStage = targetStage?"
-
+        if (limitSwitch0Input == activeValue){
+            // The elevator is at stage 1
+            currentStage = 0;
         }
+
         else if (limitSwitch1Input == activeValue){
             // The elevator is at stage 1
             currentStage = 1;
@@ -181,8 +155,9 @@ public class Elevator extends SubsystemBase {
         }
         else {
             // The elevator is between limit switches or an error has occured
-            //System.out.println("The elevator is between limit switches or an error has occured");
+            System.out.println("An error has occured in the elevator subsytem");
         }
+
 
         if (currentStage % 1 == 0 && ShouldMoveAutomatically == false) { // if the current stage is an int and we are overidding the movement
 
@@ -192,7 +167,7 @@ public class Elevator extends SubsystemBase {
             }
 
             // if we are going up, set the current stage to half a level up
-            else if (overideSpeed > 0 && overideSpeed != 0.04){
+            else if (overideSpeed > 0 && overideSpeed != 0.04){ // speed 0.04 is what we use to stop the elevator from going down
                 currentStage += 0.5;
             }
         }
