@@ -1,5 +1,4 @@
 turn limelight around since we got rid of one & wire it in
-cam for seeing
 
 code second limelight, might not be for march 7th comp
 
