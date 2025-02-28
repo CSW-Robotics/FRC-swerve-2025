@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 11.556147540983607,
-        "y": 3.9950307377049183
+        "x": 11.586988636363635,
+        "y": 4.03497159090909
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.485811534836548,
-        "y": 2.3969284314999904
+        "x": 11.516652630216576,
+        "y": 2.436869284704162
       },
       "isLocked": false,
       "linkedName": null
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 13.195524540075818,
-        "y": 0.6884720424699509
+        "y": 0.6884720424699511
       },
       "nextControl": {
         "x": 15.264588448897454,
@@ -49,10 +49,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 1.0,
-    "maxAngularVelocity": 360.0,
-    "maxAngularAcceleration": 360.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -61,10 +61,10 @@
     "rotation": -53.13010235415616
   },
   "reversed": false,
-  "folder": "Coral Machine",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -179.27960771677272
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
