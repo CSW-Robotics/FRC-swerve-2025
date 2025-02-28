@@ -4,9 +4,9 @@ import static edu.wpi.first.units.Units.derive;
 
 import org.dyn4j.collision.narrowphase.DistanceDetector;
 
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
-import com.revrobotics.Rev2mDistanceSensor.Unit;
+// import com.revrobotics.Rev2mDistanceSensor;
+// import com.revrobotics.Rev2mDistanceSensor.Port;
+// import com.revrobotics.Rev2mDistanceSensor.Unit;
 import com.revrobotics.sim.SparkLimitSwitchSim;
 import com.revrobotics.spark.SparkBase;
 import com.revrobotics.spark.SparkLimitSwitch;
@@ -30,8 +30,6 @@ public class Elevator extends SubsystemBase {
     SparkMax motor1 = new SparkMax(13, MotorType.kBrushless);
     // One of them will need to be inverted.
     SparkMax motor2 = new SparkMax(9, MotorType.kBrushless);
-
-    public Rev2mDistanceSensor distOnboard;
     
     // We only need one motor configuration, as we can set both motors to the same configuration
     SparkMaxConfig motorConfig = new SparkMaxConfig();
@@ -51,12 +49,7 @@ public class Elevator extends SubsystemBase {
         motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
 
-        
-        // Its a sensor
-        distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
-        distOnboard.setAutomaticMode(true);
-        distOnboard.setDistanceUnits(Unit.kMillimeters);
-            
+    
     }
     
     // DititalInput.get returns true or false for each limit switch on and off respectively
