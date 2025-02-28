@@ -12,7 +12,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class Dropper extends SubsystemBase {
 
-    private SparkMax m_Dropper = new SparkMax(42, MotorType.kBrushless);
+    private SparkMax m_Dropper = new SparkMax(20, MotorType.kBrushless);
     // private DigitalInput coral_in = new DigitalInput(0);
 
     private SparkMaxConfig spark_config = new SparkMaxConfig();
