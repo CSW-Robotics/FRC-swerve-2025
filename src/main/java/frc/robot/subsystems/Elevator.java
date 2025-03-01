@@ -146,10 +146,6 @@ public class Elevator extends SubsystemBase {
             // The elevator is at stage 3
             currentStage = 3;
         }
-        else {
-            // The elevator is between limit switches or an error has occured
-            System.out.println("An error has occured in the elevator subsytem");
-        }
 
 
         if (currentStage % 1 == 0 && ShouldMoveAutomatically == false) { // if the current stage is an int and we are overidding the movement
