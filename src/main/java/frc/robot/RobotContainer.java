@@ -174,8 +174,7 @@ public class RobotContainer
     
     // binds the buttons to output the coral
     new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
-      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+      .whileTrue(new InstantCommand(()-> m_Dropper.StartIntake()));
 
     // binds the buttons to input the coral
     new JoystickButton(m_XboxController, 5)
