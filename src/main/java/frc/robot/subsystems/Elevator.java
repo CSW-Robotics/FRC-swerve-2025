@@ -64,7 +64,6 @@ public class Elevator extends SubsystemBase {
     // integer type variables for later use which should not be changeable outside of this class
     protected double currentStage = 0;
     protected int targetStage = 0;
-    protected double overideSpeed;
 
     boolean ShouldMoveAutomatically = true;
 
@@ -79,7 +78,6 @@ public class Elevator extends SubsystemBase {
     public void SetMotor(double speed){
         // stops the automatic movement
         ShouldMoveAutomatically = false;
-        overideSpeed = speed;
 
         // sets the speed to the givin speed
         motor1.set(speed);
@@ -146,21 +144,6 @@ public class Elevator extends SubsystemBase {
             // The elevator is at stage 3
             currentStage = 3;
         }
-
-
-        if (currentStage % 1 == 0 && ShouldMoveAutomatically == false) { // if the current stage is an int and we are overidding the movement
-
-            // if we are going down, set the current stage to half a level down
-            if (overideSpeed < 0){
-                currentStage += -0.5;
-            }
-
-            // if we are going up, set the current stage to half a level up
-            else if (overideSpeed > 0 && overideSpeed != 0.04){ // speed 0.04 is what we use to stop the elevator from going down
-                currentStage += 0.5;
-            }
-        }
-
     }
 
     @Override

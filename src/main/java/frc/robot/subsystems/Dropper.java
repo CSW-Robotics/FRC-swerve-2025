@@ -25,7 +25,7 @@ public class Dropper extends SubsystemBase {
 
      private final Color kWhiteTarget = new Color(255, 255, 255); // defines the target
 
-    public boolean ShouldIntake = false;
+    public boolean ShouldIntake = false;  
     
 
 
@@ -57,21 +57,21 @@ public class Dropper extends SubsystemBase {
 
   public void periodic(){
 
-    if (ShouldIntake = true) {
+    // if (ShouldIntake = true) {
 
-      Color detectedColor = m_colorSensor.getColor(); // defines a variable to hold our color
+    //   Color detectedColor = m_colorSensor.getColor(); // defines a variable to hold our color
 
-      if (detectedColor == kWhiteTarget) { // if detected color is white
-        m_Dropper.set(0.3); // sets the dropper to intake
-      }
+    //   if (detectedColor == kWhiteTarget) { // if detected color is white
+    //     m_Dropper.set(0.3); // sets the dropper to intake
+    //   }
 
-      else { // if the color is not white
-        m_Dropper.set(0.0); // sets the dropper to stop outputting
-        ShouldIntake = false;
+    //   else { // if the color is not white
+    //     m_Dropper.set(0.0); // sets the dropper to stop outputting
+    //     ShouldIntake = false;
 
-      }
+    //   }
 
-    }
+    // }
 
   }
 

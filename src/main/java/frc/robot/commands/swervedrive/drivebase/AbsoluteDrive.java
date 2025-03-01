@@ -26,6 +26,7 @@ public class AbsoluteDrive extends Command
   private final DoubleSupplier  vX, vY;
   private final DoubleSupplier headingHorizontal, headingVertical;
   private boolean initRotation = false;
+  
 
   /**
    * Used to drive a swerve robot in full field-centric mode.  vX and vY supply translation inputs, where x is
@@ -92,7 +93,10 @@ public class AbsoluteDrive extends Command
 
     // Limit velocity to prevent tippy
     Translation2d translation = SwerveController.getTranslation2d(desiredSpeeds);
-    translation.rotateBy( new Rotation2d(swerve.getPitch().getRadians()*2) );
+
+    // team 5347 edits
+    translation.rotateBy(new Rotation2d((swerve.getHeading().getRadians())*2));
+    // team edits end
 
     // CSW 5347: We removed the speed limiter. This was done after the robot was slower on the 45deg angle
     // translation = SwerveMath.limitVelocity(translation, swerve.getFieldVelocity(), swerve.getPose(),

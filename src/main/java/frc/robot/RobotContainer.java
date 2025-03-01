@@ -172,13 +172,18 @@ public class RobotContainer
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
     
-    // binds the buttons to output the coral
-    new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.StartIntake()));
+    // // binds the buttons to output the coral
+    // new JoystickButton(m_XboxController, 6)
+    //   .whileTrue(new InstantCommand(()-> m_Dropper.StartIntake()));
 
     // binds the buttons to input the coral
     new JoystickButton(m_XboxController, 5)
       .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.3)))
+      .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
+
+    // binds the buttons to input the coral
+    new JoystickButton(m_XboxController, 6)
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
     new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
@@ -198,9 +203,9 @@ public class RobotContainer
     // teleop drive turning, feild rel drive
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
-      () -> -drive_joystick.getY(), 
-      () -> -drive_joystick.getX(), 
-      () -> -angle_joystick.getX(),
+      () -> drive_joystick.getY(), 
+      () -> drive_joystick.getX(), 
+      () -> angle_joystick.getX(),
 
       //checks what quadrent the angle is in and sets the two closest axis variables to true
       // the != -1 checks to make sure the knob is moves as -1 is the default possition
@@ -216,8 +221,8 @@ public class RobotContainer
     drivebase.removeDefaultCommand();
     drivebase.setDefaultCommand(
       new AbsoluteDrive(drivebase, 
-        () -> -drive_joystick.getY(), 
-        () -> -drive_joystick.getX(), 
+        () -> drive_joystick.getY(), 
+        () -> drive_joystick.getX(), 
         () -> angle_joystick.getX(),
         () -> -angle_joystick.getY()
       )
