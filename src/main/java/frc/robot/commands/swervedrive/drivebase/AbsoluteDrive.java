@@ -95,7 +95,7 @@ public class AbsoluteDrive extends Command
     Translation2d translation = SwerveController.getTranslation2d(desiredSpeeds);
 
     // team 5347 edits
-    translation.rotateBy(new Rotation2d((swerve.getHeading().getRadians())*2));
+    // translation.rotateBy(new Rotation2d((swerve.getHeading().getRadians())*2));
     // team edits end
 
     // CSW 5347: We removed the speed limiter. This was done after the robot was slower on the 45deg angle
