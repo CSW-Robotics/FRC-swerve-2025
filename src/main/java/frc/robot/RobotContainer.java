@@ -70,12 +70,12 @@ public class RobotContainer
   private final CoralOutput m_CoralOutput = new CoralOutput();
 
   public XboxController m_XboxController = new XboxController(2);
-  public Joystick drive_joystick = new Joystick(0);
-  public Joystick angle_joystick = new Joystick(1);
+  public Joystick drive_joystick = new Joystick(1);
+  public Joystick angle_joystick = new Joystick(0);
 
   // auto picker
   private static final String default_auto = "Test Auto";
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<String> m_auto_chooser = new SendableChooser<>();
   
  
   /**
@@ -92,15 +92,15 @@ public class RobotContainer
     // and then add them to a list
     for (File i_file : files_in_deploy_folder) {
       if (i_file.isFile()) {
-        m_chooser.addOption( // add option to SmartDashboard
+        m_auto_chooser.addOption( // add option to SmartDashboard
           i_file.getName().substring(0, i_file.getName().lastIndexOf(".")), // removed .auto
           i_file.getName().substring(0, i_file.getName().lastIndexOf("."))
         );
       }
     }
     // put it on SmartDashboard
-    m_chooser.setDefaultOption("Test Auto", default_auto);
-    SmartDashboard.putData("Auto Chooser", m_chooser);
+    m_auto_chooser.setDefaultOption("Test Auto", default_auto);
+    SmartDashboard.putData("Auto Chooser Mk2", m_auto_chooser);
     
     
     // set up buttons and commands
@@ -193,37 +193,43 @@ public class RobotContainer
 
 
     // a button to start limelight tracking
-    new JoystickButton(angle_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_backLimelight));
+    //new JoystickButton(drive_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_frontLimelight));
+    new JoystickButton(drive_joystick, 12).whileTrue(new TeleopDrive(
+                drivebase, 
+                ()-> 1, 
+                ()-> 0, 
+                ()-> 0,
+                ()-> true
+        ));
     
     // a button to reset the gyro
-    new JoystickButton(drive_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
+    new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
 
     // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive
     new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
       drivebase, 
-      () -> drive_joystick.getY(), 
-      () -> drive_joystick.getX(), 
+      () -> -drive_joystick.getY(), 
+      () -> -drive_joystick.getX(), 
       () -> angle_joystick.getX(),
 
       //checks what quadrent the angle is in and sets the two closest axis variables to true
       // the != -1 checks to make sure the knob is moves as -1 is the default possition
       // this in effect gives you field oriented control on the knob with fine tuning with left and right on the x axis of the joystick
 
-      () -> ((angle_joystick.getPOV(0) > 90 && angle_joystick.getPOV(0) < 270) && (angle_joystick.getPOV(0) != -1)), 
-      () -> ((angle_joystick.getPOV(0) > 270 || angle_joystick.getPOV(0) < 90) && (angle_joystick.getPOV(0) != -1)),  
-      () -> ((angle_joystick.getPOV(0) > 180 && angle_joystick.getPOV(0) < 359) && (angle_joystick.getPOV(0) != -1)),
-      () ->((angle_joystick.getPOV(0) > 0 && angle_joystick.getPOV(0) < 180) && (angle_joystick.getPOV(0) != -1))
-      
+      () -> false,
+      () -> false,  
+      () -> false,
+      () -> false
       ));
 
     drivebase.removeDefaultCommand();
     drivebase.setDefaultCommand(
       new AbsoluteDrive(drivebase, 
-        () -> drive_joystick.getY(), 
-        () -> drive_joystick.getX(), 
-        () -> angle_joystick.getX(),
+        () -> -drive_joystick.getY(), 
+        () -> -drive_joystick.getX(), 
+        () -> -angle_joystick.getX(),
         () -> -angle_joystick.getY()
       )
     );
@@ -236,7 +242,7 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand(m_chooser.getSelected());
+    return drivebase.getAutonomousCommand(m_auto_chooser.getSelected());
 
   }
 

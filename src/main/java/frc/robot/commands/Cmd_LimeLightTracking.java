@@ -1,6 +1,7 @@
 package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -36,25 +37,34 @@ public class Cmd_LimeLightTracking extends Command {
 
         );
 
-        CommandScheduler.getInstance().schedule(drivebase_command);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {}
+    public void execute() {
+        CommandScheduler.getInstance().schedule( new InstantCommand(() -> 
+        new TeleopDrive(
+                m_drivebase, 
+                ()-> 0.5, 
+                ()-> 0, 
+                ()-> 0,
+                ()-> true
+            )
+        ));
+    }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
         // stop drivetran command
-        CommandScheduler.getInstance().cancel(drivebase_command);
+        System.out.println("we ended");
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
         // if we are close, kill THIS command
-        return m_LimeLight.DDDx3_data3D[2] <= 10 ?  true : false;
+        return m_LimeLight.DDDx3_data3D[2] <= 1000 ?  true : false;
     }
 
     @Override

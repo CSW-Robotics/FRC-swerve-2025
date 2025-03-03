@@ -11,7 +11,7 @@ Driver:
 
 Opperater:
 
-    The left trigger moves the elevator down 
+    The i trigger moves the elevator down 
     The right trigger moves the elevator up
     Button 9 (BACK) opens the solonoids like during auto
     The right bumper pushes the coral out
