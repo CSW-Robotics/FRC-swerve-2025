@@ -20,7 +20,7 @@
         "y": 6.0
       },
       "prevControl": {
-        "x": 1.5253629379878761,
+        "x": 1.5253629379878764,
         "y": 5.977653908828594
       },
       "nextControl": null,
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Various Pre-Season Tests",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

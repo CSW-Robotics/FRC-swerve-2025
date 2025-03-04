@@ -193,17 +193,17 @@ public class RobotContainer
 
 
     // a button to start limelight tracking
-    //new JoystickButton(drive_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_frontLimelight));
     new JoystickButton(drive_joystick, 12).whileTrue(new TeleopDrive(
                 drivebase, 
 
-            ()-> ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[0])),
-            ()-> ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
+            ()-> -((m_frontLimelight.DDDx3_data3D[0])),
+            ()-> 0.0, //((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
 
             // this needs to be worked on because I dont know what the values the limelight will give
-            ()-> (1/-(0.0142*(m_frontLimelight.DDDx3_data3D[5]))),
-            ()-> true
+            ()-> (0.10*-(m_frontLimelight.DDDx3_data3D[4])/4),
+            ()-> false
         ));
+    new JoystickButton(drive_joystick,12).whileTrue(new InstantCommand(()-> System.out.println(m_frontLimelight.DDDx3_data3D[0])));
     
     // a button to reset the gyro
     new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
@@ -211,7 +211,15 @@ public class RobotContainer
 
     // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive
-    new JoystickButton(angle_joystick, 1).whileTrue( new AbsoluteDriveAdv(
+    new JoystickButton(angle_joystick, 1).whileTrue(new AbsoluteDrive(drivebase, 
+    () -> -drive_joystick.getY(), 
+    () -> -drive_joystick.getX(), 
+    () -> -angle_joystick.getX(),
+    () -> -angle_joystick.getY()
+  ) );
+
+    drivebase.removeDefaultCommand();
+    drivebase.setDefaultCommand(new AbsoluteDriveAdv(
       drivebase, 
       () -> -drive_joystick.getY(), 
       () -> -drive_joystick.getX(), 
@@ -225,15 +233,6 @@ public class RobotContainer
       () -> false,  
       () -> false,
       () -> false
-      ));
-
-    drivebase.removeDefaultCommand();
-    drivebase.setDefaultCommand(
-      new AbsoluteDrive(drivebase, 
-        () -> -drive_joystick.getY(), 
-        () -> -drive_joystick.getX(), 
-        () -> -angle_joystick.getX(),
-        () -> -angle_joystick.getY()
       )
     );
   }
