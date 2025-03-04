@@ -196,10 +196,13 @@ public class RobotContainer
     //new JoystickButton(drive_joystick, 12).whileTrue(new Cmd_LimeLightTracking(drivebase,m_frontLimelight));
     new JoystickButton(drive_joystick, 12).whileTrue(new TeleopDrive(
                 drivebase, 
-                ()-> 1, 
-                ()-> 0, 
-                ()-> 0,
-                ()-> true
+
+            ()-> ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[0])),
+            ()-> ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
+
+            // this needs to be worked on because I dont know what the values the limelight will give
+            ()-> (1/-(0.0142*(m_frontLimelight.DDDx3_data3D[5]))),
+            ()-> true
         ));
     
     // a button to reset the gyro
