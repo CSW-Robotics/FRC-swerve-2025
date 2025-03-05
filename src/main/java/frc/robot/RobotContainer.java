@@ -108,6 +108,14 @@ public class RobotContainer
 
   }
 
+  private double deadband(double input, double min) {
+    if (Math.abs(input) < min) {
+      return 0.0;
+    } else {
+      return input;
+    }
+  }
+
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
@@ -212,18 +220,18 @@ public class RobotContainer
     // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive
     new JoystickButton(angle_joystick, 1).whileTrue(new AbsoluteDrive(drivebase, 
-    () -> -drive_joystick.getY(), 
-    () -> -drive_joystick.getX(), 
-    () -> -angle_joystick.getX(),
-    () -> -angle_joystick.getY()
+    () -> deadband(-drive_joystick.getY(), 0.05), 
+    () -> deadband(-drive_joystick.getX(), 0.05), 
+    () -> deadband(-angle_joystick.getX(), 0.05),
+    () -> deadband(-angle_joystick.getY(), 0.05)
   ) );
 
     drivebase.removeDefaultCommand();
     drivebase.setDefaultCommand(new AbsoluteDriveAdv(
       drivebase, 
-      () -> -drive_joystick.getY(), 
-      () -> -drive_joystick.getX(), 
-      () -> angle_joystick.getX(),
+      () -> -deadband(drive_joystick.getY(), 0.05), 
+      () -> -deadband(drive_joystick.getX(), 0.05), 
+      () -> deadband(angle_joystick.getX(), 0.05),
 
       //checks what quadrent the angle is in and sets the two closest axis variables to true
       // the != -1 checks to make sure the knob is moves as -1 is the default possition
