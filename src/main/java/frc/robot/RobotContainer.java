@@ -6,6 +6,7 @@
 // Never Forget: ransomware, siblings, Big "P", limelight chandelier, 60 factorial, greenery, and sound effects 
 package frc.robot;
 
+import com.fasterxml.jackson.core.json.DupDetector;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -201,19 +203,33 @@ public class RobotContainer
 
 
     // a button to start limelight tracking
-    new JoystickButton(drive_joystick, 12).whileTrue(new TeleopDrive(
+    new JoystickButton(drive_joystick, 1).whileTrue(new TeleopDrive(
                 drivebase, 
 
-            ()-> -((m_frontLimelight.DDDx3_data3D[0])),
-            ()-> 0.0, //((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
+            ()-> 0.0, // this is y -((m_frontLimelight.DDDx3_data3D[0]))*2,
+            ()-> Math.copySign( 
+                Math.min(
+                  Math.abs(m_frontLimelight.DDDx3_data3D[0]*(4)),
+                  0.8
+                ), 
+                m_frontLimelight.DDDx3_data3D[0]
+              ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
 
-            // this needs to be worked on because I dont know what the values the limelight will give
-            ()-> (0.10*-(m_frontLimelight.DDDx3_data3D[4])/4),
+            ()-> Math.copySign(
+
+              Math.min(
+                Math.abs(m_frontLimelight.DDDx3_data3D[4]), 
+                0.3
+              ), 
+
+              -m_frontLimelight.DDDx3_data3D[4]
+              
+              ),
             ()-> false
         ));
-    new JoystickButton(drive_joystick,12).whileTrue(new InstantCommand(()-> System.out.println(m_frontLimelight.DDDx3_data3D[0])));
     
     // a button to reset the gyro
+    new JoystickButton(drive_joystick, 1).onTrue( new InstantCommand( ()-> System.out.println(m_frontLimelight.DDDx3_data3D[0]) ) );
     new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
 
 
@@ -229,8 +245,8 @@ public class RobotContainer
     drivebase.removeDefaultCommand();
     drivebase.setDefaultCommand(new AbsoluteDriveAdv(
       drivebase, 
-      () -> -deadband(drive_joystick.getY(), 0.05), 
-      () -> -deadband(drive_joystick.getX(), 0.05), 
+      () -> deadband(-drive_joystick.getY(), 0.05), 
+      () -> deadband(-drive_joystick.getX(), 0.05), 
       () -> deadband(angle_joystick.getX(), 0.05),
 
       //checks what quadrent the angle is in and sets the two closest axis variables to true
