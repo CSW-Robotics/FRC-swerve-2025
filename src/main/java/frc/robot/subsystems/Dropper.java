@@ -35,22 +35,17 @@ public class Dropper extends SubsystemBase {
     distOnboard.setAutomaticMode(true);
     distOnboard.setDistanceUnits(Unit.kMillimeters);
   }
+public void restartAutoOutake(){
+
+  overide_automatic_output = false;
+
+}
 
  
 //set the motor speed
   public void setMotor(double speed) {
 
-    if (speed == 0.0){
-      
-      overide_automatic_output = false;
-
-    }
-
-    else{
-
       overide_automatic_output = true;
-
-    }
 
     // sets motors to speed
     m_Dropper.set(speed);
@@ -62,11 +57,15 @@ public class Dropper extends SubsystemBase {
     if (110>distOnboard.getRange() && distOnboard.getRange()>5) {
       setMotor(0.2);
 
+      System.out.println("coral detected intaking");
+
     }
 
     else if (overide_automatic_output == false){
 
       setMotor(0);
+
+      System.out.println("freezing dropper motor");
     }
     
 

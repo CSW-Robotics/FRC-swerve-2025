@@ -13,13 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "LimelightTrackingBack"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "DropCoral"
+            "name": "LimelightTrackingFront"
           }
         }
       ]
