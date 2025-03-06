@@ -138,7 +138,7 @@ public class RobotContainer
 // then waiting for the coral to fall down the ramp
 // then closes the solenoid to reset it.
 
-    NamedCommands.registerCommand("LimelightTracking", new ParallelRaceGroup(
+    NamedCommands.registerCommand("LimelightTrackingBack", new ParallelRaceGroup(
 
     new WaitCommand(4),
     
@@ -157,19 +157,57 @@ public class RobotContainer
               
             ()->Math.copySign( 
                 Math.min(
-                  Math.abs(m_backLimelight.DDDx3_data3D[0]*(4)-offset_limelight_X),
+                  Math.abs((m_backLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
                   0.8
                 ), 
-                -m_backLimelight.DDDx3_data3D[0]
-              ),
+                -m_backLimelight.DDDx3_data3D[0]-offset_limelight_X
+              ), // this is x ((0.2)/-(26-m_backLimelight.DDDx3_data3D[2])),
 
             ()-> Math.copySign(
               Math.min(
-                Math.abs(m_backLimelight.DDDx3_data3D[4]*2), 
+                Math.abs(m_backLimelight.DDDx3_data3D[4]*10), 
                 0.3
               ), 
 
               m_backLimelight.DDDx3_data3D[4]
+              
+              ),
+            ()-> false
+        )));
+
+
+        NamedCommands.registerCommand("LimelightTrackingFront", new ParallelRaceGroup(
+
+        new WaitCommand(4),
+        
+        new TeleopDrive(
+                drivebase, 
+
+            ()-> Math.copySign(
+              Math.min(
+                Math.abs((m_frontLimelight.DDDx3_data3D[2]-0.1)), 
+                0.8
+              ), 
+
+              m_frontLimelight.DDDx3_data3D[2]
+              
+              ),
+              
+            ()->Math.copySign( 
+                Math.min(
+                  Math.abs((m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
+                  0.8
+                ), 
+                m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X
+              ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
+
+            ()-> Math.copySign(
+              Math.min(
+                Math.abs(m_frontLimelight.DDDx3_data3D[4]*10), 
+                0.3
+              ), 
+
+              -m_frontLimelight.DDDx3_data3D[4]
               
               ),
             ()-> false
@@ -271,65 +309,6 @@ public class RobotContainer
               ),
             ()-> false
         ));
-
-
-        new JoystickButton(drive_joystick, 3).onTrue(
-
-        new SequentialCommandGroup(
-          
-            new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-
-            new ParallelRaceGroup(
-              
-                new WaitCommand(5),
-
-                new TeleopDrive(
-                        drivebase, 
-
-                    ()-> Math.copySign(
-                      Math.min(
-                        Math.abs((m_frontLimelight.DDDx3_data3D[2]-0.1)), 
-                        0.8
-                      ), 
-
-                      m_frontLimelight.DDDx3_data3D[2]
-                      
-                      ),
-                      
-                    ()->Math.copySign( 
-                        Math.min(
-                          Math.abs((m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
-                          0.8
-                        ), 
-                        m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X
-                      ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
-
-                    ()-> Math.copySign(
-                      Math.min(
-                        Math.abs(m_frontLimelight.DDDx3_data3D[4]*10), 
-                        0.3
-                      ), 
-
-                      -m_frontLimelight.DDDx3_data3D[4]
-                      
-                      ),
-                    ()-> false
-              )
-              
-            ),  
-
-            new InstantCommand( ()-> m_Elevator.ChangeTargetStage(4) ),
-
-            new WaitCommand(2),
-
-            new InstantCommand(()-> m_Dropper.setMotor(0.2)),
-
-            new WaitCommand(2),
-
-            new InstantCommand( ()-> m_Dropper.setMotor(0))
-
-        )
-    );
     
     // a button to reset the gyro
     new JoystickButton(drive_joystick, 1).onTrue( new InstantCommand( ()-> System.out.println(m_frontLimelight.DDDx3_data3D[0]) ) );

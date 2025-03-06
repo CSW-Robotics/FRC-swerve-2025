@@ -40,7 +40,7 @@ public class Dropper extends SubsystemBase {
 //set the motor speed
   public void setMotor(double speed) {
 
-    if (speed == 0){
+    if (speed == 0.0){
       
       overide_automatic_output = false;
 
