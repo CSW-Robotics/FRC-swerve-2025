@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Forward"
+            "pathName": "Right Start"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Turn Left"
+            "name": "LimelightTracking"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropCoral"
           }
         }
       ]

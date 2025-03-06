@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -78,6 +79,7 @@ public class RobotContainer
   // auto picker
   private static final String default_auto = "Test Auto";
   private final SendableChooser<String> m_auto_chooser = new SendableChooser<>();
+  private double offset_limelight_X;
   
  
   /**
@@ -136,6 +138,43 @@ public class RobotContainer
 // then waiting for the coral to fall down the ramp
 // then closes the solenoid to reset it.
 
+    NamedCommands.registerCommand("LimelightTracking", new ParallelRaceGroup(
+
+    new WaitCommand(4),
+    
+    new TeleopDrive(
+                drivebase, 
+
+            ()-> Math.copySign(
+              Math.min(
+                Math.abs((m_backLimelight.DDDx3_data3D[2]-0.1)), 
+                0.8
+              ), 
+
+              -m_backLimelight.DDDx3_data3D[2]
+              
+              ),
+              
+            ()->Math.copySign( 
+                Math.min(
+                  Math.abs(m_backLimelight.DDDx3_data3D[0]*(4)-offset_limelight_X),
+                  0.8
+                ), 
+                -m_backLimelight.DDDx3_data3D[0]
+              ),
+
+            ()-> Math.copySign(
+              Math.min(
+                Math.abs(m_backLimelight.DDDx3_data3D[4]*2), 
+                0.3
+              ), 
+
+              m_backLimelight.DDDx3_data3D[4]
+              
+              ),
+            ()-> false
+        )));
+
 
     // this is for AUTO, and only AUTO. 
     // it is fundamentally the same as the code below assigned to the x button
@@ -182,18 +221,15 @@ public class RobotContainer
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
     
-    // // binds the buttons to output the coral
-    // new JoystickButton(m_XboxController, 6)
-    //   .whileTrue(new InstantCommand(()-> m_Dropper.StartIntake()));
 
     // binds the buttons to input the coral
     new JoystickButton(m_XboxController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.3)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.2)))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
     // binds the buttons to input the coral
     new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
       .onFalse(new InstantCommand(()-> m_Dropper.setMotor(0.0)));
 
     new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
@@ -206,19 +242,27 @@ public class RobotContainer
     new JoystickButton(drive_joystick, 1).whileTrue(new TeleopDrive(
                 drivebase, 
 
-            ()-> 0.0, // this is y -((m_frontLimelight.DDDx3_data3D[0]))*2,
-            ()-> Math.copySign( 
+            ()-> Math.copySign(
+              Math.min(
+                Math.abs((m_frontLimelight.DDDx3_data3D[2]-0.1)), 
+                0.8
+              ), 
+
+              m_frontLimelight.DDDx3_data3D[2]
+              
+              ),
+              
+            ()->Math.copySign( 
                 Math.min(
-                  Math.abs(m_frontLimelight.DDDx3_data3D[0]*(4)),
+                  Math.abs((m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
                   0.8
                 ), 
-                m_frontLimelight.DDDx3_data3D[0]
+                m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X
               ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
 
             ()-> Math.copySign(
-
               Math.min(
-                Math.abs(m_frontLimelight.DDDx3_data3D[4]), 
+                Math.abs(m_frontLimelight.DDDx3_data3D[4]*10), 
                 0.3
               ), 
 
@@ -231,7 +275,9 @@ public class RobotContainer
     // a button to reset the gyro
     new JoystickButton(drive_joystick, 1).onTrue( new InstantCommand( ()-> System.out.println(m_frontLimelight.DDDx3_data3D[0]) ) );
     new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
-
+    
+    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> this.offset_limelight_X = -0.17));
+    new JoystickButton(drive_joystick, 6).onTrue(new InstantCommand(()-> this.offset_limelight_X = 0.17));
 
     // absolute drive that switches to robot relative
     // teleop drive turning, feild rel drive

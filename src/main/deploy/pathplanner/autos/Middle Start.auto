@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red-Right Start"
+            "pathName": "Middle Start"
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "Red-Right Coral"
+            "name": "LimelightTracking"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropCoral"
           }
         }
       ]
