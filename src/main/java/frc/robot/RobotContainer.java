@@ -6,72 +6,41 @@
 // Never Forget: ransomware, siblings, Big "P", limelight chandelier, 60 factorial, greenery, and sound effects 
 package frc.robot;
 
-import com.fasterxml.jackson.core.json.DupDetector;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Cmd_LimeLightTracking;
+import frc.robot.commands.LimelightTrackings;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
-import frc.robot.commands.swervedrive.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.CoralOutput;
 import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.concurrent.PriorityBlockingQueue;
 
-import javax.naming.PartialResultException;
-
-import swervelib.SwerveInputStream;
-import swervelib.imu.AnalogGyroSwerve;
-
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
- * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
- * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
- */
+// our robot container object
 public class RobotContainer
 {
-  // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/neo"));
-
+  // subsystems
+  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final LimeLight m_backLimelight = new LimeLight("limelight");
   private final LimeLight m_frontLimelight = new LimeLight("limelight-front");
-
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
 
+  // controllers
   public XboxController m_XboxController = new XboxController(2);
   public Joystick drive_joystick = new Joystick(1);
   public Joystick angle_joystick = new Joystick(0);
@@ -80,14 +49,25 @@ public class RobotContainer
   private static final String default_auto = "Test Auto";
   private final SendableChooser<String> m_auto_chooser = new SendableChooser<>();
   
-  private double offset_limelight_X = 0.172;
+  // x offests of the auto tracking
+  public double x_offset_left =  -0.168;
+  public double x_offset_right =  0.172;
+  private double x_offset = x_offset_right;
+
+  // SemiAuto Elevator Level Chooser for SD
+  private final SendableChooser<Integer> auto_elevator_level_chooser = new SendableChooser<>();
   
  
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer()
-  {
+  public RobotContainer() {
+
+
+
+
+
+  // ##### FILE MANAGER FOR AUTO PICKER ON SD #####
 
     // get all the files in the pathplanner/autos dir
     File[] files_in_deploy_folder = new File(
@@ -106,13 +86,27 @@ public class RobotContainer
     // put it on SmartDashboard
     m_auto_chooser.setDefaultOption("Test Auto", default_auto);
     SmartDashboard.putData("Auto Chooser Mk2", m_auto_chooser);
-    
-    
+
+
+
+
+  // ##### SEMIAUTO LEVEL PICKER ON SD ####
+
+    auto_elevator_level_chooser.setDefaultOption("Level 2", 1);
+    auto_elevator_level_chooser.addOption("Level 3", 2);
+    auto_elevator_level_chooser.addOption("Level 4", 3);
+    SmartDashboard.putData("SemiAuto Elevator Level Chooser", m_auto_chooser);
+
+
+
+  
+
     // set up buttons and commands
     configureBindings();
-
   }
 
+
+  // deadband function to put on joysticks
   private double deadband(double input, double min) {
     if (Math.abs(input) < min) {
       return 0.0;
@@ -121,125 +115,149 @@ public class RobotContainer
     }
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary predicate, or via the
-   * named factories in {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4}
-   * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
-  private void configureBindings()
-  {
-    NamedCommands.registerCommand("FreezeWheels", new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ));
 
-// Dropping coral functions:
-// 1st not auto 2nd auto.
-
-// Drops the coral by opening the solenoid,
-// then waiting for the coral to fall down the ramp
-// then closes the solenoid to reset it.
-
-    NamedCommands.registerCommand("LimelightTrackingBack", new ParallelRaceGroup(
-
-    new WaitCommand(4),
-    
-    new TeleopDrive(
-                drivebase, 
-
-            ()-> Math.copySign(
-              Math.min(
-                Math.abs((m_backLimelight.DDDx3_data3D[2]-0.1)), 
-                0.8
-              ), 
-
-              -m_backLimelight.DDDx3_data3D[2]
-              
-              ),
-              
-            ()->Math.copySign( 
-                Math.min(
-                  Math.abs((m_backLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
-                  0.8
-                ), 
-                -m_backLimelight.DDDx3_data3D[0]-offset_limelight_X
-              ), // this is x ((0.2)/-(26-m_backLimelight.DDDx3_data3D[2])),
-
-            ()-> Math.copySign(
-              Math.min(
-                Math.abs(m_backLimelight.DDDx3_data3D[4]*10), 
-                0.3
-              ), 
-
-              m_backLimelight.DDDx3_data3D[4]
-              
-              ),
-            ()-> false
-        )));
+  private void configureBindings() {
 
 
-        NamedCommands.registerCommand("LimelightTrackingFront", new SequentialCommandGroup(
-          
+
+  // ##### NAMED COMMANDS FOR PATHPLANNER #####
+
+    // freeze the wheels
+    NamedCommands.registerCommand("FreezeWheels", 
+      new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
+    );
+
+    // back limelight tracking
+    NamedCommands.registerCommand("LimelightTrackingBack", 
+      LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight, x_offset)
+    );
+
+    // tracks to front, places anywhere on reef (not level 1)
+    NamedCommands.registerCommand("LimelightTrackingFront", 
+      new SequentialCommandGroup(
         new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-
         new WaitCommand(3),
-
-        new ParallelRaceGroup(
-          
-            new WaitCommand(5),
-
-            new TeleopDrive(
-                    drivebase, 
-
-                ()-> Math.copySign(
-                  Math.min(
-                    // its okay, the environments fine
-                    Math.abs((m_frontLimelight.DDDx3_data3D[2]-0.1)), 
-                    0.8
-                  ), 
-
-                  m_frontLimelight.DDDx3_data3D[2]
-                  
-                  ),
-                  
-                ()->Math.copySign( 
-                    Math.min(
-                      Math.abs((m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
-                      0.8
-                    ), 
-                    m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X
-                  ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
-
-                ()-> Math.copySign(
-                  Math.min(
-                    Math.abs(m_frontLimelight.DDDx3_data3D[4]*10), 
-                    0.3
-                  ), 
-
-                  -m_frontLimelight.DDDx3_data3D[4]
-                  
-                  ),
-                ()-> false
-          )
-          
-        ),  
-
-        new InstantCommand(() -> m_Elevator.ChangeTargetStage(1)), // change this stage to our desired stage with variable
-
+        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, x_offset),
+        new InstantCommand(() -> m_Elevator.ChangeTargetStage(auto_elevator_level_chooser.getSelected())),
         new WaitCommand(2),
-
         new InstantCommand(()-> m_Dropper.setMotor(0.2)),
-
         new WaitCommand(1),
-
         new InstantCommand( ()-> m_Dropper.setMotor(0)),
-
         new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
+      )
+    );
 
-    ));
+
+
+
+
+  // ##### SEMI-AUTOs FOR TELEOP #####
+
+    // a button to start limelight tracking (from the front) [on driving joystick trigger]
+    new JoystickButton(drive_joystick, 1).whileTrue(
+      LimelightTrackings.getLimelightTrackingFrontNoTimeout(drivebase, m_frontLimelight, x_offset)
+    );
+
+    // fully auto place on reef [on driving joystick button 3]
+    new JoystickButton(drive_joystick,3).onTrue(
+      new SequentialCommandGroup(  
+        new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
+        new WaitCommand(3),
+        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, x_offset),
+        new InstantCommand(() -> m_Elevator.ChangeTargetStage(auto_elevator_level_chooser.getSelected())),
+        new InstantCommand(()-> m_Dropper.setMotor(0.2)),
+        new WaitCommand(1),
+        new InstantCommand( ()-> m_Dropper.setMotor(0)),
+        new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
+      )
+    );
+
+    // fully auto place on level 1 from the back dropper [on driving joystick button 4]
+    new JoystickButton(drive_joystick, 4).onTrue(
+      new SequentialCommandGroup(
+        LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight, x_offset),
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // opens the solenoid
+        new ParallelRaceGroup( // wait for 2 secs, lock wheels
+          new WaitCommand(2.0),
+          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
+          // we lock the wheels or otherwise they continue to spin which causes problems,
+          // since this ability works best only with a stational robot
+        ),
+        new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
+      )
+    );
       
 
 
 
+
+  // ##### DRIVER CONTROLS #####
+
+    // see SEMI-AUTOs FOR TELEOP above ^^^
+
+    // default driving. turning is left-right on turn joystick, field-rel translation
+    drivebase.removeDefaultCommand();
+    drivebase.setDefaultCommand(new AbsoluteDriveAdv(
+      drivebase, 
+      () -> deadband(-drive_joystick.getY(), 0.05), 
+      () -> deadband(-drive_joystick.getX(), 0.05), 
+      () -> deadband(angle_joystick.getX(), 0.05),
+
+      ()->false,()->false,()->false,()->false
+      )
+    );
+
+    // point turning, feild rel drive [when turning joystick trigger is held]
+    new JoystickButton(angle_joystick, 1).whileTrue(
+      new AbsoluteDrive(drivebase, 
+        () -> deadband(-drive_joystick.getY(), 0.05), 
+        () -> deadband(-drive_joystick.getX(), 0.05), 
+        () -> deadband(-angle_joystick.getX(), 0.05),
+        () -> deadband(-angle_joystick.getY(), 0.05)
+      ) 
+    );
+
+    // change auto offest [on driver joystick: 5 sets offset left, 6 sets offset right]
+    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> this.x_offset = x_offset_left));
+    new JoystickButton(drive_joystick, 6).onTrue(new InstantCommand(()-> this.x_offset = x_offset_right));
+
+    // reset the gyro [angle joystick button 3]
+    new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro));
+
+
+
+
+
+  // ##### OPERATOR CONTROLS ##### 
+
+    // sets auto elevator stages
+    // X: Y: O: □: 
+    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
+    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
+    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
+    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(0)));
+ 
+    // override auto elvelator, push it up [on operator right trigger]
+    new JoystickButton(m_XboxController, 8)
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
+
+    // override auto elvelator, push it down [on operator left trigger]
+    new JoystickButton(m_XboxController, 7)
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
+    
+    // suck in the coral (backwards robotbot wise) [operator left bumper]
+    new JoystickButton(m_XboxController, 5)
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.2)))
+      .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
+
+    // push out the coral [operator right bumper]
+    new JoystickButton(m_XboxController, 6)
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
+      .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
+
+    // open coral drop solenoids [operator button 9, also called "BACK" ]
     new JoystickButton(m_XboxController, 9).onTrue(
       new SequentialCommandGroup(
         new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // Turns on the solenoid, which retracts it
@@ -248,242 +266,24 @@ public class RobotContainer
           new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ) // and also lock the wheels
           // we lock the wheels or otherwise they continue to spin which causes problems,
           // since this ability works best only with a stational robot
-
         ),
         new InstantCommand(() -> m_CoralOutput.setSolenoid(false)) // Then extends it again, which completes the cycle
-      ));
-
-
-    // binds the buttons on the drive stick to allow us to overide the automatic movement of the elevator.
-    new JoystickButton(m_XboxController, 8)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
-
-    new JoystickButton(m_XboxController, 7)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
-    
-
-    // binds the buttons to input the coral
-    new JoystickButton(m_XboxController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.2)))
-      .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
-
-    // binds the buttons to input the coral
-    new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
-      .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
-
-    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
-    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
-    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
-    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(0)));
-
-    // a button to start limelight tracking
-    new JoystickButton(drive_joystick, 1).whileTrue(new TeleopDrive(
-                drivebase, 
-
-            ()-> Math.copySign(
-              Math.min(
-                Math.abs((m_frontLimelight.DDDx3_data3D[2]-0.1)), 
-                0.8
-              ), 
-
-              m_frontLimelight.DDDx3_data3D[2]
-              
-              ),
-              
-            ()->Math.copySign( 
-                Math.min(
-                  Math.abs((m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
-                  0.8
-                ), 
-                m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X
-              ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
-
-            ()-> Math.copySign(
-              Math.min(
-                Math.abs(m_frontLimelight.DDDx3_data3D[4]*10), 
-                0.3
-              ), 
-
-              -m_frontLimelight.DDDx3_data3D[4]
-              
-              ),
-            ()-> false
-        ));
-
-
-    new JoystickButton(drive_joystick,3).onTrue(
-        new SequentialCommandGroup(
-          
-            new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-
-            new WaitCommand(3),
-
-            new ParallelRaceGroup(
-              
-                new WaitCommand(5),
-
-                new TeleopDrive(
-                        drivebase, 
-
-                    ()-> Math.copySign(
-                      Math.min(
-                        // its okay, the environments fine
-                        Math.abs((m_frontLimelight.DDDx3_data3D[2]-0.1)), 
-                        0.8
-                      ), 
-
-                      m_frontLimelight.DDDx3_data3D[2]
-                      
-                      ),
-                      
-                    ()->Math.copySign( 
-                        Math.min(
-                          Math.abs((m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X)*(10)),
-                          0.8
-                        ), 
-                        m_frontLimelight.DDDx3_data3D[0]-offset_limelight_X
-                      ), // this is x ((0.2)/-(26-m_frontLimelight.DDDx3_data3D[2])),
-
-                    ()-> Math.copySign(
-                      Math.min(
-                        Math.abs(m_frontLimelight.DDDx3_data3D[4]*10), 
-                        0.3
-                      ), 
-
-                      -m_frontLimelight.DDDx3_data3D[4]
-                      
-                      ),
-                    ()-> false
-              )
-              
-            ),  
-
-            new InstantCommand(() -> m_Elevator.ChangeTargetStage(1)), // change this stage to our desired stage with variable
-
-            new WaitCommand(2),
-
-            new InstantCommand(()-> m_Dropper.setMotor(0.2)),
-
-            new WaitCommand(1),
-
-            new InstantCommand( ()-> m_Dropper.setMotor(0)),
-
-            new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
-
-    ));
-
-    new JoystickButton(drive_joystick, 4).onTrue(
-
-        new SequentialCommandGroup(
-
-          new ParallelRaceGroup(
-
-            new WaitCommand(5),
-
-            new TeleopDrive(
-                    drivebase, 
-
-                ()-> Math.copySign(
-                  Math.min(
-                    Math.abs((m_backLimelight.DDDx3_data3D[2])+0.5), 
-                    0.8
-                  ), 
-
-                  -m_backLimelight.DDDx3_data3D[2]
-                  
-                  ),
-                  
-                ()->Math.copySign( 
-                    Math.min(
-                      Math.abs((m_backLimelight.DDDx3_data3D[0])*(10)),
-                      0.8
-                    ), 
-                    m_backLimelight.DDDx3_data3D[0]
-                  ), // this is x ((0.2)/-(26-m_backLimelight.DDDx3_data3D[2])),
-
-                ()-> Math.copySign(
-                  Math.min(
-                    Math.abs(m_backLimelight.DDDx3_data3D[4]*10), 
-                    0.3
-                  ), 
-
-                  -m_backLimelight.DDDx3_data3D[4]
-                  
-                  ),
-                ()-> false
-            )),
-
-            
-            new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // opens the solenoid
-
-            new ParallelRaceGroup( // wait for 2 secs, lock wheels
-                new WaitCommand(2.0),
-                new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
-                // we lock the wheels or otherwise they continue to spin which causes problems,
-                // since this ability works best only with a stational robot
-            ),
-
-            new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
-
-
-        ));
-    
-    // a button to reset the gyro
-    new JoystickButton(drive_joystick, 1).onTrue( new InstantCommand( ()-> System.out.println(m_frontLimelight.DDDx3_data3D[0]) ) );
-    new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro) );
-    
-    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> this.offset_limelight_X = -0.168));
-    new JoystickButton(drive_joystick, 6).onTrue(new InstantCommand(()-> this.offset_limelight_X = 0.172));
-
-    // absolute drive that switches to robot relative
-    // teleop drive turning, feild rel drive
-    new JoystickButton(angle_joystick, 1).whileTrue(new AbsoluteDrive(drivebase, 
-    () -> deadband(-drive_joystick.getY(), 0.05), 
-    () -> deadband(-drive_joystick.getX(), 0.05), 
-    () -> deadband(-angle_joystick.getX(), 0.05),
-    () -> deadband(-angle_joystick.getY(), 0.05)
-  ) );
-
-    drivebase.removeDefaultCommand();
-    drivebase.setDefaultCommand(new AbsoluteDriveAdv(
-      drivebase, 
-      () -> deadband(-drive_joystick.getY(), 0.05), 
-      () -> deadband(-drive_joystick.getX(), 0.05), 
-      () -> deadband(angle_joystick.getX(), 0.05),
-
-      //checks what quadrent the angle is in and sets the two closest axis variables to true
-      // the != -1 checks to make sure the knob is moves as -1 is the default possition
-      // this in effect gives you field oriented control on the knob with fine tuning with left and right on the x axis of the joystick
-
-      () -> false,
-      () -> false,  
-      () -> false,
-      () -> false
       )
     );
+
+
+
+
+    
   }
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
+
+
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
+    // get data from the SD selector
     return drivebase.getAutonomousCommand(m_auto_chooser.getSelected());
-
   }
 
-  public void setDriveMode()
-  {
-    configureBindings();
-  }
-
-  public void setMotorBrake(boolean brake)
-  {
-    drivebase.setMotorBrake(brake);
-  }
+  public void setDriveMode() { configureBindings(); }
+  public void setMotorBrake(boolean brake) { drivebase.setMotorBrake(brake);}
 }
