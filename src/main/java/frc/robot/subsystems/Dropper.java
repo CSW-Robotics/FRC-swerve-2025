@@ -37,6 +37,8 @@ public class Dropper extends SubsystemBase {
   }
 public void restartAutoOutake(){
 
+  setMotor(0);
+
   overide_automatic_output = false;
 
 }
@@ -54,7 +56,15 @@ public void restartAutoOutake(){
 
 
   public void periodic(){
-    if (110>distOnboard.getRange() && distOnboard.getRange()>5) {
+
+    System.out.println(distOnboard.getRange());
+
+
+    if (110>distOnboard.getRange() && distOnboard.getRange()>5 && overide_automatic_output == false) {
+
+      // i dont think the distances on the above if statement is right
+      // so i am printing out the distance sensor data, adjust as needed
+
       setMotor(0.2);
 
       System.out.println("coral detected intaking");
