@@ -39,6 +39,7 @@ public class RobotContainer
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
+  private final LEDs m_LEDS = new LEDs();
 
   // controllers
   public XboxController m_XboxController = new XboxController(2);
