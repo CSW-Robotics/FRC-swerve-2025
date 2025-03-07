@@ -231,7 +231,7 @@ public class RobotContainer
   // ##### OPERATOR CONTROLS ##### 
 
     // sets auto elevator stages
-    // X: Y: O: □: 
+    // X: level 0 Y: level 3 B: level 2  A: level 1
     new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
     new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
     new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
