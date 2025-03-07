@@ -129,7 +129,7 @@ public class RobotContainer
 
     // back limelight tracking
     NamedCommands.registerCommand("LimelightTrackingBack", 
-      LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight, x_offset)
+      LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight)
     );
 
     // tracks to front, places anywhere on reef (not level 1)
@@ -175,7 +175,7 @@ public class RobotContainer
     // fully auto place on level 1 from the back dropper [on driving joystick button 4]
     new JoystickButton(drive_joystick, 4).onTrue(
       new SequentialCommandGroup(
-        LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight, x_offset),
+        LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight),
         new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // opens the solenoid
         new ParallelRaceGroup( // wait for 2 secs, lock wheels
           new WaitCommand(2.0),

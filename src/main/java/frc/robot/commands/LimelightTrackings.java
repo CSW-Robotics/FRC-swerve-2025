@@ -51,7 +51,7 @@ public class LimelightTrackings extends Command {
   }
 
   // track with the back limelight
-  public static Command getLimelightTrackingBack(SwerveSubsystem drivebase, LimeLight limelight, double x_offset) {
+  public static Command getLimelightTrackingBack(SwerveSubsystem drivebase, LimeLight limelight) {
     return new ParallelRaceGroup(
       new WaitCommand(4),
       new TeleopDrive(
@@ -66,10 +66,10 @@ public class LimelightTrackings extends Command {
             
           ()->Math.copySign( 
               Math.min(
-                Math.abs((limelight.DDDx3_data3D[0]-x_offset)*(10)),
+                Math.abs((limelight.DDDx3_data3D[0])*(10)),
                 0.8
               ), 
-              -limelight.DDDx3_data3D[0]-x_offset
+              -limelight.DDDx3_data3D[0]
             ), // this is x
 
           ()-> Math.copySign(
