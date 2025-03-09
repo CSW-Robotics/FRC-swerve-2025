@@ -2,6 +2,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.RobotContainer;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -10,7 +11,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 public class LimelightTrackings extends Command {
 
   // track with the front limelight
-  public static Command getLimelightTrackingFrontNoTimeout(SwerveSubsystem drivebase, LimeLight limelight, double x_offset) {
+  public static Command getLimelightTrackingFrontNoTimeout(SwerveSubsystem drivebase, LimeLight limelight, RobotContainer robot_container) {
     return new TeleopDrive(
       drivebase, 
 
@@ -25,10 +26,10 @@ public class LimelightTrackings extends Command {
           
       ()->Math.copySign( 
         Math.min(
-          Math.abs((limelight.DDDx3_data3D[0]-x_offset)*(10)),
+          Math.abs((limelight.DDDx3_data3D[0]-robot_container.x_offset)*(10)),
           0.8
         ), 
-        limelight.DDDx3_data3D[0]-x_offset
+        limelight.DDDx3_data3D[0]-robot_container.x_offset
       ), // this is x 
 
       ()-> Math.copySign(
@@ -43,10 +44,10 @@ public class LimelightTrackings extends Command {
     );
   }
 
-  public static Command getLimelightTrackingFront(SwerveSubsystem drivebase, LimeLight limelight, double x_offset) {
+  public static Command getLimelightTrackingFront(SwerveSubsystem drivebase, LimeLight limelight, RobotContainer robot_container) {
     return new ParallelRaceGroup(
       new WaitCommand(5),
-      getLimelightTrackingFrontNoTimeout(drivebase, limelight, x_offset)
+      getLimelightTrackingFrontNoTimeout(drivebase, limelight, robot_container)
     );
   }
 
@@ -69,7 +70,7 @@ public class LimelightTrackings extends Command {
                 Math.abs((limelight.DDDx3_data3D[0])*(10)),
                 0.8
               ), 
-              -limelight.DDDx3_data3D[0]
+              limelight.DDDx3_data3D[0]
             ), // this is x
 
           ()-> Math.copySign(

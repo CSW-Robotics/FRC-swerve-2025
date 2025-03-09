@@ -52,7 +52,7 @@ public class RobotContainer
   // x offests of the auto tracking
   public double x_offset_left =  -0.168;
   public double x_offset_right =  0.172;
-  private double x_offset = x_offset_right;
+  public double x_offset = x_offset_right;
 
   // SemiAuto Elevator Level Chooser for SD
   private final SendableChooser<Integer> auto_elevator_level_chooser = new SendableChooser<>();
@@ -85,7 +85,7 @@ public class RobotContainer
     }
     // put it on SmartDashboard
     m_auto_chooser.setDefaultOption("Test Auto", default_auto);
-    SmartDashboard.putData("Auto Chooser Mk2", m_auto_chooser);
+    SmartDashboard.putData("Auto Chooser Mk3", m_auto_chooser);
 
 
 
@@ -95,7 +95,7 @@ public class RobotContainer
     auto_elevator_level_chooser.setDefaultOption("Level 2", 1);
     auto_elevator_level_chooser.addOption("Level 3", 2);
     auto_elevator_level_chooser.addOption("Level 4", 3);
-    SmartDashboard.putData("SemiAuto Elevator Level Chooser", m_auto_chooser);
+    SmartDashboard.putData("SemiAuto Elevator Level Chooser", auto_elevator_level_chooser);
 
 
 
@@ -136,10 +136,10 @@ public class RobotContainer
     NamedCommands.registerCommand("LimelightTrackingFront", 
       new SequentialCommandGroup(
         new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-        new WaitCommand(3),
-        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, x_offset),
-        new InstantCommand(() -> m_Elevator.ChangeTargetStage(auto_elevator_level_chooser.getSelected())),
-        new WaitCommand(2),
+        new WaitCommand(1.5),
+        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, this),
+        new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
+        new WaitCommand(1.5),
         new InstantCommand(()-> m_Dropper.setMotor(0.2)),
         new WaitCommand(1),
         new InstantCommand( ()-> m_Dropper.setMotor(0)),
@@ -155,16 +155,17 @@ public class RobotContainer
 
     // a button to start limelight tracking (from the front) [on driving joystick trigger]
     new JoystickButton(drive_joystick, 1).whileTrue(
-      LimelightTrackings.getLimelightTrackingFrontNoTimeout(drivebase, m_frontLimelight, x_offset)
+      LimelightTrackings.getLimelightTrackingFrontNoTimeout(drivebase, m_frontLimelight, this)
     );
 
     // fully auto place on reef [on driving joystick button 3]
     new JoystickButton(drive_joystick,3).onTrue(
       new SequentialCommandGroup(  
         new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-        new WaitCommand(3),
-        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, x_offset),
-        new InstantCommand(() -> m_Elevator.ChangeTargetStage(auto_elevator_level_chooser.getSelected())),
+        new WaitCommand(1.5),
+        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, this),
+        new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
+        new WaitCommand(1.5),
         new InstantCommand(()-> m_Dropper.setMotor(0.2)),
         new WaitCommand(1),
         new InstantCommand( ()-> m_Dropper.setMotor(0)),
@@ -218,8 +219,8 @@ public class RobotContainer
     );
 
     // change auto offest [on driver joystick: 5 sets offset left, 6 sets offset right]
-    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> this.x_offset = x_offset_left));
-    new JoystickButton(drive_joystick, 6).onTrue(new InstantCommand(()-> this.x_offset = x_offset_right));
+    new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> this.x_offset = this.x_offset_left)); //this.x_offset_left
+    new JoystickButton(drive_joystick, 6).onTrue(new InstantCommand(()-> this.x_offset = this.x_offset_right)); //this.x_offset_right
 
     // reset the gyro [angle joystick button 3]
     new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro));

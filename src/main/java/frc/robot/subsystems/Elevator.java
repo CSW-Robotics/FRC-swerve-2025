@@ -18,6 +18,7 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation.MatchType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -72,7 +73,14 @@ public class Elevator extends SubsystemBase {
         RestartAutoMovement();
         // Set targetStage to the newtargetStage to remember our new target: This target will be 
         // passed in when calling this method 
-        targetStage = newtargetStage;    
+        targetStage = newtargetStage;  
+    }
+
+    public void ChangeTargetStageFromChooser(SendableChooser<Integer> autoChooser) {
+        RestartAutoMovement();
+        // Set targetStage to the newtargetStage to remember our new target: This target will be 
+        // passed in when calling this method 
+        targetStage = autoChooser.getSelected();    
     }
 
     public void SetMotor(double speed){
@@ -99,7 +107,7 @@ public class Elevator extends SubsystemBase {
                 return 1; // Go up
             }
             else{
-                return 0.2; //stay in place 
+                return 0.1; //stay in place 
             }
     }
     
@@ -108,7 +116,7 @@ public class Elevator extends SubsystemBase {
             
             if (ShouldMoveAutomatically == true) {
 
-                double motorSpeed = 0.2*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
+                double motorSpeed = 0.4*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
 
                 motor1.set(motorSpeed);
                 motor2.set(motorSpeed);

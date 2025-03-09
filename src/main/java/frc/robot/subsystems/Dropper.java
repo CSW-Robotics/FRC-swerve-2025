@@ -57,7 +57,7 @@ public void restartAutoOutake(){
 
   public void periodic(){
 
-    System.out.println(distOnboard.getRange());
+    //System.out.println(distOnboard.getRange());
 
 
     if (110>distOnboard.getRange() && distOnboard.getRange()>5 && overide_automatic_output == false) {

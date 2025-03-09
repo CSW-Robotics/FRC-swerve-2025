@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PushOut Path-back"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PushOut Path-front"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Start-from push"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LimelightTrackingFront"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
