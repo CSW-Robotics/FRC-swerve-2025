@@ -36,6 +36,8 @@ public class LimeLight extends SubsystemBase {
     // 3d AT data
     public double[] DDDx3_data3D = NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
 
+    public double last_seen_tag_id = 0;
+
     public void setAprilTag() {
         NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("pipeline").setNumber(0);
     }
@@ -55,6 +57,10 @@ public class LimeLight extends SubsystemBase {
         tv = entry_tv.getDouble(0.0);
 
         DDDx3_data3D = NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
+
+        if (tid != 0) {
+            last_seen_tag_id = tid;
+        }
     }
 
     @Override
