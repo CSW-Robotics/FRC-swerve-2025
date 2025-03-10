@@ -20,11 +20,13 @@ public class LimeLight extends SubsystemBase {
     NetworkTableEntry entry_ty = table.getEntry("ty");
     NetworkTableEntry entry_ta = table.getEntry("ta");
     NetworkTableEntry entry_tid = table.getEntry("tid");
+    NetworkTableEntry entry_tv = table.getEntry("tv");
     NetworkTableEntry entry_getpipe = table.getEntry("getpipe");
     
     // general AT data
     public double tid = 0;
     public double getpipe;
+    public double tv = 0;
 
     // 2d AT data
     public double tx = 0;
@@ -50,6 +52,7 @@ public class LimeLight extends SubsystemBase {
         ta = entry_ta.getDouble(0.0);
         tid = entry_tid.getDouble(0.0);
         getpipe = entry_getpipe.getDouble(0.0);
+        tv = entry_tv.getDouble(0.0);
 
         DDDx3_data3D = NetworkTableInstance.getDefault().getTable(m_network_table_key).getEntry("targetpose_cameraspace").getDoubleArray(new double[6]);
     }

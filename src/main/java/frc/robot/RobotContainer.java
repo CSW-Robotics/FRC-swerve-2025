@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.LimelightTrackings;
+import frc.robot.commands.LimelightTracking;
+import frc.robot.commands.Traversals;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
@@ -129,7 +130,7 @@ public class RobotContainer
 
     // back limelight tracking
     NamedCommands.registerCommand("LimelightTrackingBack", 
-      LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight)
+      LimelightTracking.Back(drivebase, m_backLimelight)
     );
 
     // tracks to front, places anywhere on reef (not level 1)
@@ -137,7 +138,10 @@ public class RobotContainer
       new SequentialCommandGroup(
         new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
         new WaitCommand(1.5),
-        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, this),
+        new ParallelRaceGroup(
+          new WaitCommand(5),
+          LimelightTracking.Front(drivebase, m_frontLimelight, this)
+        ),
         new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
         new WaitCommand(1.5),
         new InstantCommand(()-> m_Dropper.setMotor(0.2)),
@@ -155,39 +159,40 @@ public class RobotContainer
 
     // a button to start limelight tracking (from the front) [on driving joystick trigger]
     new JoystickButton(drive_joystick, 1).whileTrue(
-      LimelightTrackings.getLimelightTrackingFrontNoTimeout(drivebase, m_frontLimelight, this)
+      LimelightTracking.Front(drivebase, m_frontLimelight, this)
     );
 
     // fully auto place on reef [on driving joystick button 3]
-    new JoystickButton(drive_joystick,3).onTrue(
-      new SequentialCommandGroup(  
-        new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-        new WaitCommand(1.5),
-        LimelightTrackings.getLimelightTrackingFront(drivebase, m_frontLimelight, this),
-        new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
-        new WaitCommand(1.5),
-        new InstantCommand(()-> m_Dropper.setMotor(0.2)),
-        new WaitCommand(1),
-        new InstantCommand( ()-> m_Dropper.setMotor(0)),
-        new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
+    // new JoystickButton(drive_joystick,3).onTrue(
+    //   new SequentialCommandGroup(  
+    //     new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
+    //     new WaitCommand(1.5),
+    //     LimelightTracking.getLimelightTrackingFront(drivebase, m_frontLimelight, this),
+    //     new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
+    //     new WaitCommand(1.5),
+    //     new InstantCommand(()-> m_Dropper.setMotor(0.2)),
+    //     new WaitCommand(1),
+    //     new InstantCommand( ()-> m_Dropper.setMotor(0)),
+    //     new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
+    //   )
+    // );
+
+
+    // traverse in [driver button 3]
+    new JoystickButton(drive_joystick, 3).whileTrue(
+      new SequentialCommandGroup(
+        Traversals.In(drivebase, m_frontLimelight, 1),
+        LimelightTracking.Back(drivebase, m_backLimelight)
       )
     );
 
-    // fully auto place on level 1 from the back dropper [on driving joystick button 4]
-    new JoystickButton(drive_joystick, 4).onTrue(
+    // traverse out [driver button 4]
+    new JoystickButton(drive_joystick, 4).whileTrue(
       new SequentialCommandGroup(
-        LimelightTrackings.getLimelightTrackingBack(drivebase, m_backLimelight),
-        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // opens the solenoid
-        new ParallelRaceGroup( // wait for 2 secs, lock wheels
-          new WaitCommand(2.0),
-          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
-          // we lock the wheels or otherwise they continue to spin which causes problems,
-          // since this ability works best only with a stational robot
-        ),
-        new InstantCommand(() -> m_CoralOutput.setSolenoid(false))
+        Traversals.Out(drivebase, 1, 19),
+        LimelightTracking.Front(drivebase, m_backLimelight, this)
       )
     );
-      
 
 
 
