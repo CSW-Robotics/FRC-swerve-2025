@@ -33,6 +33,8 @@ import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
+import javax.lang.model.element.Parameterizable;
+
 // our robot container object
 public class RobotContainer
 {
@@ -184,13 +186,16 @@ public class RobotContainer
           Traversals.Out(drivebase, 1, true),
           new DieOnTag(m_frontLimelight, 19)
         ),
-        LimelightTracking.Front(drivebase, m_frontLimelight, this),
-        new DieOnDoneTracking(m_frontLimelight, 19),
-        new DieOnElevatorLevel(m_Elevator, 3),
-        new InstantCommand (()->m_Dropper.setMotor(0.2)),
-        new WaitCommand(0.5),
-        new InstantCommand (()->m_Dropper.setMotor(0.2))
-      )
+        new ParallelRaceGroup(
+          LimelightTracking.Front(drivebase, m_frontLimelight, this),
+        
+          new SequentialCommandGroup(
+            new DieOnDoneTracking(m_frontLimelight, 19),
+            new DieOnElevatorLevel(m_Elevator, 3),
+            new InstantCommand (()->m_Dropper.setMotor(0.2)),
+            new WaitCommand(0.5),
+            new InstantCommand (()->m_Dropper.setMotor(0.0))
+      )))
     );
 
 
