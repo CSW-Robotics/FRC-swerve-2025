@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DieOnTag;
 import frc.robot.commands.LimelightTracking;
 import frc.robot.commands.Traversals;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
@@ -189,7 +190,10 @@ public class RobotContainer
     // traverse out [driver button 4]
     new JoystickButton(drive_joystick, 4).whileTrue(
       new SequentialCommandGroup(
-        Traversals.Out(drivebase, 1, 19),
+        new ParallelRaceGroup(
+          Traversals.Out(drivebase, 1, true),
+          new DieOnTag(m_backLimelight, 19)
+        ),
         LimelightTracking.Front(drivebase, m_backLimelight, this)
       )
     );
