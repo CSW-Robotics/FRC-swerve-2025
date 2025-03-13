@@ -18,6 +18,8 @@ import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.DieOnDoneTracking;
+import frc.robot.commands.DieOnElevatorLevel;
 import frc.robot.commands.DieOnTag;
 import frc.robot.commands.LimelightTracking;
 import frc.robot.commands.Traversals;
@@ -163,38 +165,31 @@ public class RobotContainer
       LimelightTracking.Front(drivebase, m_frontLimelight, this)
     );
 
-    // fully auto place on reef [on driving joystick button 3]
-    // new JoystickButton(drive_joystick,3).onTrue(
-    //   new SequentialCommandGroup(  
-    //     new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-    //     new WaitCommand(1.5),
-    //     LimelightTracking.getLimelightTrackingFront(drivebase, m_frontLimelight, this),
-    //     new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
-    //     new WaitCommand(1.5),
-    //     new InstantCommand(()-> m_Dropper.setMotor(0.2)),
-    //     new WaitCommand(1),
-    //     new InstantCommand( ()-> m_Dropper.setMotor(0)),
-    //     new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
-    //   )
-    // );
-
 
     // traverse in [driver button 3]
     new JoystickButton(drive_joystick, 3).whileTrue(
       new SequentialCommandGroup(
+        new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)),
         Traversals.In(drivebase, m_frontLimelight, 1),
-        LimelightTracking.Back(drivebase, m_backLimelight)
+        LimelightTracking.Back(drivebase, m_backLimelight),
+        new DieOnDoneTracking(m_backLimelight, 1)
       )
     );
 
     // traverse out [driver button 4]
     new JoystickButton(drive_joystick, 4).whileTrue(
       new SequentialCommandGroup(
+        new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
         new ParallelRaceGroup(
           Traversals.Out(drivebase, 1, true),
-          new DieOnTag(m_backLimelight, 19)
+          new DieOnTag(m_frontLimelight, 19)
         ),
-        LimelightTracking.Front(drivebase, m_backLimelight, this)
+        LimelightTracking.Front(drivebase, m_frontLimelight, this),
+        new DieOnDoneTracking(m_frontLimelight, 19),
+        new DieOnElevatorLevel(m_Elevator, 3),
+        new InstantCommand (()->m_Dropper.setMotor(0.2)),
+        new WaitCommand(0.5),
+        new InstantCommand (()->m_Dropper.setMotor(0.2))
       )
     );
 

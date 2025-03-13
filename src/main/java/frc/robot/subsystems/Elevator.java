@@ -63,8 +63,8 @@ public class Elevator extends SubsystemBase {
     
 
     // integer type variables for later use which should not be changeable outside of this class
-    protected double currentStage = 0;
-    protected int targetStage = 0;
+    public int currentStage = 0;
+    public int targetStage = 0;
 
     boolean ShouldMoveAutomatically = true;
 
