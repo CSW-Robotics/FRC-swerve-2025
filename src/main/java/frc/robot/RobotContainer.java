@@ -9,13 +9,12 @@ package frc.robot;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -47,6 +46,7 @@ public class RobotContainer
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
+   private PowerDistribution pdh = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
 
   // controllers
   public XboxController m_XboxController = new XboxController(2);
@@ -61,6 +61,8 @@ public class RobotContainer
   public double x_offset_left =  -0.168;
   public double x_offset_right =  0.172;
   public double x_offset = x_offset_right;
+
+  public int semi_auto_el_level = 2;
 
   // SemiAuto Elevator Level Chooser for SD
   private final SendableChooser<Integer> auto_elevator_level_chooser = new SendableChooser<>();
@@ -174,9 +176,8 @@ public class RobotContainer
     new JoystickButton(drive_joystick, 3).whileTrue(
       new SequentialCommandGroup(
         new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)),
-        Traversals.In(drivebase, m_frontLimelight, 1),
         LimelightTracking.Back(drivebase, m_backLimelight),
-        new DieOnDoneTracking(m_backLimelight, 1)
+        new DieOnDoneTracking(m_backLimelight)
       )
     );
 
@@ -185,15 +186,12 @@ public class RobotContainer
       new SequentialCommandGroup(
         new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
         new ParallelRaceGroup(
-          Traversals.Out(drivebase, 1, true),
-          new DieOnTag(m_frontLimelight, 19)
-        ),
-        new ParallelRaceGroup(
           LimelightTracking.Front(drivebase, m_frontLimelight, this),
         
           new SequentialCommandGroup(
-            new DieOnDoneTracking(m_frontLimelight, 19),
-            new DieOnElevatorLevel(m_Elevator, 3),
+            new DieOnDoneTracking(m_frontLimelight),
+            new InstantCommand (()-> m_Elevator.ChangeTargetStage(semi_auto_el_level)),
+            new DieOnElevatorLevel(m_Elevator, semi_auto_el_level),
             new InstantCommand (()->m_Dropper.setMotor(0.2)),
             new WaitCommand(0.5),
             new InstantCommand (()->m_Dropper.setMotor(0.0))
@@ -298,4 +296,19 @@ public class RobotContainer
 
   public void setDriveMode() { configureBindings(); }
   public void setMotorBrake(boolean brake) { drivebase.setMotorBrake(brake);}
+
+
+  public void periodic(){
+
+      if (m_Elevator.currentStage == 0 && m_backLimelight.DDDx3_data3D[2] < 0.5){
+        pdh.setSwitchableChannel(true);
+    }
+
+
+    else{
+        pdh.setSwitchableChannel(false);
+    }
+
+  }
 }
+
