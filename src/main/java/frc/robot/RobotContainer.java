@@ -6,6 +6,7 @@
 // Never Forget: ransomware, siblings, Big "P", limelight chandelier, 60 factorial, greenery, and sound effects 
 package frc.robot;
 
+import com.ctre.phoenix6.signals.Led1OffColorValue;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
@@ -46,6 +47,8 @@ public class RobotContainer
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
   private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_Elevator, m_backLimelight);
+
+  private final LEDs m_LEDs = new LEDs();
 
   // controllers
   public XboxController m_XboxController = new XboxController(2);
