@@ -252,6 +252,18 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
     new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(0)));
  
+
+    // ElevatorTweakout button
+    new JoystickButton(m_XboxController, 9).onTrue(
+      
+      new SequentialCommandGroup(
+        new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
+        new WaitCommand(0.2),
+        new InstantCommand(()-> m_Elevator.SetMotor(-0.14)),
+        new WaitCommand(0.2)
+        ));
+
+
     // override auto elvelator, push it up [on operator right trigger]
     new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
@@ -259,7 +271,7 @@ public class RobotContainer
 
     // override auto elvelator, push it down [on operator left trigger]
     new JoystickButton(m_XboxController, 7)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.2)))
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.14)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
     
     // suck in the coral (backwards robotbot wise) [operator left bumper]
