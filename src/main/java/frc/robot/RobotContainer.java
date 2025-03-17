@@ -30,11 +30,10 @@ import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.CoralOutput;
 import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.IndicatorLight;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
-
-import javax.lang.model.element.Parameterizable;
 
 // our robot container object
 public class RobotContainer
@@ -46,7 +45,7 @@ public class RobotContainer
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final CoralOutput m_CoralOutput = new CoralOutput();
-   private PowerDistribution pdh = new PowerDistribution(1, PowerDistribution.ModuleType.kRev);
+  private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_Elevator, m_backLimelight);
 
   // controllers
   public XboxController m_XboxController = new XboxController(2);
@@ -169,6 +168,11 @@ public class RobotContainer
     // a button to start limelight tracking (from the front) [on driving joystick trigger]
     new JoystickButton(drive_joystick, 1).whileTrue(
       LimelightTracking.Front(drivebase, m_frontLimelight, this)
+    );
+
+    // a button to start limelight tracking (from the back) [on turing joystick trigger]
+    new JoystickButton(angle_joystick, 1).whileTrue(
+      LimelightTracking.Back(drivebase, m_frontLimelight)
     );
 
 
@@ -296,19 +300,5 @@ public class RobotContainer
 
   public void setDriveMode() { configureBindings(); }
   public void setMotorBrake(boolean brake) { drivebase.setMotorBrake(brake);}
-
-
-  public void periodic(){
-
-      if (m_Elevator.currentStage == 0 && m_backLimelight.DDDx3_data3D[2] < 0.5){
-        pdh.setSwitchableChannel(true);
-    }
-
-
-    else{
-        pdh.setSwitchableChannel(false);
-    }
-
-  }
 }
 
