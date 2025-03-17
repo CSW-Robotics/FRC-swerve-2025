@@ -257,11 +257,13 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 9).onTrue(
       
       new SequentialCommandGroup(
+        new InstantCommand(()-> m_LEDs.FentLights()),
         new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
         new WaitCommand(0.2),
         new InstantCommand(()-> m_Elevator.SetMotor(-0.14)),
-        new WaitCommand(0.2)
-        ));
+        new WaitCommand(0.2),
+        new InstantCommand(() -> m_LEDs.BaseColor())
+      ));
 
 
     // override auto elvelator, push it up [on operator right trigger]
