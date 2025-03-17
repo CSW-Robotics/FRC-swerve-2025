@@ -23,7 +23,7 @@ public class Dropper extends SubsystemBase {
 
     private SparkMaxConfig spark_config = new SparkMaxConfig();
 
-    private Rev2mDistanceSensor distOnboard;  
+    public Rev2mDistanceSensor distOnboard;  
     
     private boolean overide_automatic_output = false;
 
