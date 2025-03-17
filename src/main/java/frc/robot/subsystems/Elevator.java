@@ -28,9 +28,9 @@ public class Elevator extends SubsystemBase {
 
     // Define the motors which will move the elevator; James and I were unsure of the specific 
     // motor syntax. We also don't know the id's of the motors manning the elevator 
-    SparkMax motor1 = new SparkMax(13, MotorType.kBrushless);
+    SparkMax motor1 = new SparkMax(9, MotorType.kBrushless);
     // One of them will need to be inverted.
-    SparkMax motor2 = new SparkMax(9, MotorType.kBrushless);
+    SparkMax motor2 = new SparkMax(13, MotorType.kBrushless);
     
     // We only need one motor configuration, as we can set both motors to the same configuration
     SparkMaxConfig motorConfig = new SparkMaxConfig();
