@@ -28,7 +28,6 @@ import frc.robot.commands.Traversals;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
-import frc.robot.subsystems.CoralOutput;
 import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.IndicatorLight;
@@ -45,7 +44,6 @@ public class RobotContainer
   private final LimeLight m_frontLimelight = new LimeLight("limelight-front");
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
-  private final CoralOutput m_CoralOutput = new CoralOutput();
   private final LEDs m_LEDs = new LEDs();
   private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight);
 
@@ -273,25 +271,12 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 6)
       .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
-
-    // open coral drop solenoids [operator button 9, also called "BACK" ]
-    new JoystickButton(m_XboxController, 9).onTrue(
-      new SequentialCommandGroup(
-        new InstantCommand(() -> m_CoralOutput.setSolenoid(true)), // Turns on the solenoid, which retracts it
-        new ParallelRaceGroup( 
-          new WaitCommand(2.0), // wait for 2 secs 
-          new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true ) // and also lock the wheels
-          // we lock the wheels or otherwise they continue to spin which causes problems,
-          // since this ability works best only with a stational robot
-        ),
-        new InstantCommand(() -> m_CoralOutput.setSolenoid(false)) // Then extends it again, which completes the cycle
-      )
-    );
-
-
-
-
     
+
+
+
+
+      
   }
 
 
