@@ -53,5 +53,11 @@ public class LEDs {
         color.applyTo(m_ledBuffer);
         m_led.setData(m_ledBuffer);
     }
+
+    public void BaseColor(){
+
+        this.SetColor(0, 0, 100);
+
+    }
     
 }
