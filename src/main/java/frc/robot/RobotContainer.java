@@ -45,7 +45,7 @@ public class RobotContainer
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final LEDs m_LEDs = new LEDs();
-  private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight);
+  private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight, m_Dropper);
 
 
   // controllers
