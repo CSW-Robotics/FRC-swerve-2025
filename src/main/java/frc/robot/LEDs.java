@@ -26,7 +26,7 @@ public class LEDs {
         m_led.setLength(m_ledBuffer.getLength());
 
         // set color and data
-        color = LEDPattern.solid(Color.kDeepPink);
+        color = LEDPattern.solid(Color.kWhite);
         color.applyTo(m_ledBuffer);
         m_led.setData(m_ledBuffer);
 
