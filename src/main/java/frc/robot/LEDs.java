@@ -2,6 +2,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Meter;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -42,6 +43,13 @@ public class LEDs {
     public void SetRainbow() {
         color = LEDPattern.rainbow(255, 128);
         color = color.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), Meter.of(1/120));
+        color.applyTo(m_ledBuffer);
+        m_led.setData(m_ledBuffer);
+    }
+
+    public void FentLights() {
+        color = LEDPattern.solid(Color.kWhite);
+        color = color.blink(Seconds.of(0.1));
         color.applyTo(m_ledBuffer);
         m_led.setData(m_ledBuffer);
     }
