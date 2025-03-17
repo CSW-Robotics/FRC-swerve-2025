@@ -24,17 +24,26 @@ public class LEDs {
         m_ledBuffer = new AddressableLEDBuffer(120);
         m_led.setLength(m_ledBuffer.getLength());
 
-        // set color
+        // set color and data
         color = LEDPattern.solid(Color.kDeepPink);
+        color.applyTo(m_ledBuffer);
+        m_led.setData(m_ledBuffer);
 
+        //start
+        m_led.start();
+    }
+
+    public void SetColor(int h, int s, int v) {
+        color = LEDPattern.solid(Color.fromHSV(h, s, v));
+        color.applyTo(m_ledBuffer);
+        m_led.setData(m_ledBuffer);
+    }
+
+    public void SetRainbow() {
         color = LEDPattern.rainbow(255, 128);
         color = color.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), Meter.of(1/120));
         color.applyTo(m_ledBuffer);
-
-        // set color data and start
         m_led.setData(m_ledBuffer);
-        m_led.start();
-
     }
     
 }
