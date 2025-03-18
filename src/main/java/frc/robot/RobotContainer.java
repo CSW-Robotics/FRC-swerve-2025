@@ -25,6 +25,7 @@ import frc.robot.commands.DieOnDoneTracking;
 import frc.robot.commands.DieOnElevatorLevel;
 import frc.robot.commands.DieOnTag;
 import frc.robot.commands.LimelightTracking;
+import frc.robot.commands.SemiAutoCycle;
 import frc.robot.commands.Traversals;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
@@ -63,7 +64,7 @@ public class RobotContainer
   public double x_offset_right = -0.175;
   public double x_offset = x_offset_right;
 
-  public int semi_auto_el_level = 2;
+  public int semi_auto_el_level = 1;
 
   // SemiAuto Elevator Level Chooser for SD
   private final SendableChooser<Integer> auto_elevator_level_chooser = new SendableChooser<>();
@@ -140,30 +141,17 @@ public class RobotContainer
 
     NamedCommands.registerCommand("TargetLeft", new InstantCommand(()-> this.x_offset = this.x_offset_left));
 
+    NamedCommands.registerCommand("TargetLevel2", new InstantCommand(()-> this.semi_auto_el_level = 1));
+    NamedCommands.registerCommand("TargetLevel4", new InstantCommand(()-> this.semi_auto_el_level = 3));
+
     // back limelight tracking
     NamedCommands.registerCommand("LimelightTrackingBack", 
-    new SequentialCommandGroup(
-      new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)),
-      LimelightTracking.Back(drivebase, m_backLimelight)
-    )
+    SemiAutoCycle.GetCoral(drivebase, m_backLimelight, m_Dropper)
     );
 
     // tracks to front, places anywhere on reef (not level 1)
     NamedCommands.registerCommand("LimelightTrackingFront", 
-    new SequentialCommandGroup(
-      new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
-      new ParallelRaceGroup(
-        LimelightTracking.Front(drivebase, m_frontLimelight, this),
-      
-        new SequentialCommandGroup(
-          new DieOnDoneTracking(m_frontLimelight,0.65),
-          new InstantCommand (()-> m_Elevator.ChangeTargetStage(1)),
-          new DieOnElevatorLevel(m_Elevator, 1),
-          new InstantCommand (()->m_Dropper.setMotor(0.4)),
-          new WaitCommand(0.5),
-          new InstantCommand (()->m_Dropper.setMotor(0.0)),
-          new InstantCommand (()-> m_Elevator.ChangeTargetStage(0))
-    )))
+    SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this)
     );
 
 
@@ -184,31 +172,14 @@ public class RobotContainer
     );
 
 
-    // traverse in [driver button 3]
+    // Get coral from the coral station
     new JoystickButton(drive_joystick, 3).whileTrue(
-      new SequentialCommandGroup(
-        new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)),
-        LimelightTracking.Back(drivebase, m_backLimelight),
-        new DieOnDoneTracking(m_backLimelight, 0.63)
-      )
+      SemiAutoCycle.GetCoral(drivebase, m_backLimelight, m_Dropper)
     );
 
-    // traverse out [driver button 4]
+    // Score the coral we have in our robot
     new JoystickButton(drive_joystick, 4).whileTrue(
-      new SequentialCommandGroup(
-        new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
-        new ParallelRaceGroup(
-          LimelightTracking.Front(drivebase, m_frontLimelight, this),
-        
-          new SequentialCommandGroup(
-            new DieOnDoneTracking(m_frontLimelight, 0.65),
-            new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
-            new DieOnElevatorLevel(m_Elevator, 2),
-            new InstantCommand (()->m_Dropper.setMotor(0.4)),
-            new WaitCommand(0.5),
-            new InstantCommand (()->m_Dropper.setMotor(0.0)),
-            new InstantCommand (()-> m_Elevator.ChangeTargetStage(0))
-      )))
+      SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this)
     );
 
 
@@ -277,9 +248,7 @@ public class RobotContainer
         new InstantCommand(()-> m_LEDs.FentLights()),
         new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
         new WaitCommand(0.2),
-        new InstantCommand(()-> m_Elevator.SetMotor(-0.14)),
-        new WaitCommand(0.15),
-        new InstantCommand(() -> m_LEDs.BaseColor())
+        new InstantCommand(()-> m_Elevator.SetMotor(-0.14))
       ));
 
 

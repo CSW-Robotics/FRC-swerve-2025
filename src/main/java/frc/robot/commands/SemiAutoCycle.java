@@ -32,12 +32,18 @@ public class SemiAutoCycle extends Command {
           )));
     }
 
-    public static Command CoralStation(SwerveSubsystem drivebase, LimeLight m_backLimelight, RobotContainer m_RobotContainer){
+    public static Command GetCoral(SwerveSubsystem drivebase, LimeLight m_backLimelight, Dropper m_Dropper){
 
         return new SequentialCommandGroup(
+          new ParallelRaceGroup(
             LimelightTracking.Back(drivebase, m_backLimelight),
-            new DieOnDoneTracking(m_backLimelight, 0.63)
-          );
+            
+            new SequentialCommandGroup(
+              new DieOnDoneTracking(m_backLimelight, 0.63),
+              new DieOnCoralIn(m_Dropper),
+              new DieOnCoralIntaken(m_Dropper)
+            )
+          ));
 
     }
 

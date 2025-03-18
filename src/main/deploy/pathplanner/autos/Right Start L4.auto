@@ -1,0 +1,93 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "TargetLevel4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Start alt"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LimelightTrackingFront"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "goto Coral station alt"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "LimelightTrackingBack"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 1.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "FreezeWheels"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "back from CS alt"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TargetLeft"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "LimelightTrackingFront"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
