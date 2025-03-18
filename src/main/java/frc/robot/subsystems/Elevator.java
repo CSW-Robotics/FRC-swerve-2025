@@ -43,11 +43,11 @@ public class Elevator extends SubsystemBase {
         motorConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
 
         // Line wrapping
-        motor2.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
+        motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
 
         motorConfig.inverted(true);
-        motor1.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
+        motor2.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, 
                          SparkBase.PersistMode.kPersistParameters);
 
     
@@ -107,7 +107,7 @@ public class Elevator extends SubsystemBase {
                 return 1; // Go up
             }
             else{
-                return 0.1; //stay in place 
+                return 0.08; //stay in place 
             }
     }
     
@@ -116,7 +116,7 @@ public class Elevator extends SubsystemBase {
             
             if (ShouldMoveAutomatically == true) {
 
-                double motorSpeed = 0.4*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
+                double motorSpeed = Math.max((0.5*(0.5*Math.abs(currentStage-targetStage))), 0.4)*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
 
                 motor1.set(motorSpeed);
                 motor2.set(motorSpeed);

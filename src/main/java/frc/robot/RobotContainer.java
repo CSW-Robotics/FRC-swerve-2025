@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,8 +41,8 @@ public class RobotContainer
 {
   // subsystems
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
-  private final LimeLight m_backLimelight = new LimeLight("limelight");
-  private final LimeLight m_frontLimelight = new LimeLight("limelight-front");
+  private final LimeLight  m_frontLimelight = new LimeLight("limelight");
+  private final LimeLight     m_backLimelight = new LimeLight("limelight-front");
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
   private final LEDs m_LEDs = new LEDs();
@@ -58,8 +59,8 @@ public class RobotContainer
   private final SendableChooser<String> m_auto_chooser = new SendableChooser<>();
   
   // x offests of the auto tracking
-  public double x_offset_left =  -0.168;
-  public double x_offset_right =  0.172;
+  public double x_offset_left =  0.13;
+  public double x_offset_right = -0.175;
   public double x_offset = x_offset_right;
 
   public int semi_auto_el_level = 2;
@@ -95,7 +96,7 @@ public class RobotContainer
     }
     // put it on SmartDashboard
     m_auto_chooser.setDefaultOption("Test Auto", default_auto);
-    SmartDashboard.putData("Auto Chooser Mk3", m_auto_chooser);
+    SmartDashboard.putData("Auto Chooser Mk4", m_auto_chooser);
 
 
 
@@ -137,27 +138,32 @@ public class RobotContainer
       new TeleopDrive(drivebase, ()->0.0, ()->0.0, ()->0.0, ()->true )
     );
 
+    NamedCommands.registerCommand("TargetLeft", new InstantCommand(()-> this.x_offset = this.x_offset_left));
+
     // back limelight tracking
     NamedCommands.registerCommand("LimelightTrackingBack", 
+    new SequentialCommandGroup(
+      new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)),
       LimelightTracking.Back(drivebase, m_backLimelight)
+    )
     );
 
     // tracks to front, places anywhere on reef (not level 1)
     NamedCommands.registerCommand("LimelightTrackingFront", 
-      new SequentialCommandGroup(
-        new InstantCommand (()->m_Elevator.ChangeTargetStage(2)),
-        new WaitCommand(1.5),
-        new ParallelRaceGroup(
-          new WaitCommand(5),
-          LimelightTracking.Front(drivebase, m_frontLimelight, this)
-        ),
-        new InstantCommand(() -> m_Elevator.ChangeTargetStageFromChooser(auto_elevator_level_chooser)),
-        new WaitCommand(1.5),
-        new InstantCommand(()-> m_Dropper.setMotor(0.2)),
-        new WaitCommand(1),
-        new InstantCommand( ()-> m_Dropper.setMotor(0)),
-        new InstantCommand( ()-> m_Elevator.ChangeTargetStage(0))
-      )
+    new SequentialCommandGroup(
+      new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
+      new ParallelRaceGroup(
+        LimelightTracking.Front(drivebase, m_frontLimelight, this),
+      
+        new SequentialCommandGroup(
+          new DieOnDoneTracking(m_frontLimelight,0.65),
+          new InstantCommand (()-> m_Elevator.ChangeTargetStage(1)),
+          new DieOnElevatorLevel(m_Elevator, 1),
+          new InstantCommand (()->m_Dropper.setMotor(0.4)),
+          new WaitCommand(0.5),
+          new InstantCommand (()->m_Dropper.setMotor(0.0)),
+          new InstantCommand (()-> m_Elevator.ChangeTargetStage(0))
+    )))
     );
 
 
@@ -173,7 +179,8 @@ public class RobotContainer
 
     // a button to start limelight tracking (from the back) [on turing joystick trigger]
     new JoystickButton(angle_joystick, 1).whileTrue(
-      LimelightTracking.Back(drivebase, m_frontLimelight)
+      LimelightTracking.Back(drivebase, m_backLimelight)
+      //LimelightTracking.Front(drivebase, m_frontLimelight, this)
     );
 
 
@@ -182,7 +189,7 @@ public class RobotContainer
       new SequentialCommandGroup(
         new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)),
         LimelightTracking.Back(drivebase, m_backLimelight),
-        new DieOnDoneTracking(m_backLimelight)
+        new DieOnDoneTracking(m_backLimelight, 0.63)
       )
     );
 
@@ -194,12 +201,13 @@ public class RobotContainer
           LimelightTracking.Front(drivebase, m_frontLimelight, this),
         
           new SequentialCommandGroup(
-            new DieOnDoneTracking(m_frontLimelight),
-            new InstantCommand (()-> m_Elevator.ChangeTargetStage(semi_auto_el_level)),
-            new DieOnElevatorLevel(m_Elevator, semi_auto_el_level),
-            new InstantCommand (()->m_Dropper.setMotor(0.2)),
+            new DieOnDoneTracking(m_frontLimelight, 0.65),
+            new InstantCommand (()-> m_Elevator.ChangeTargetStage(2)),
+            new DieOnElevatorLevel(m_Elevator, 2),
+            new InstantCommand (()->m_Dropper.setMotor(0.4)),
             new WaitCommand(0.5),
-            new InstantCommand (()->m_Dropper.setMotor(0.0))
+            new InstantCommand (()->m_Dropper.setMotor(0.0)),
+            new InstantCommand (()-> m_Elevator.ChangeTargetStage(0))
       )))
     );
 
@@ -223,7 +231,7 @@ public class RobotContainer
     );
 
     // point turning, feild rel drive [when turning joystick trigger is held]
-    new JoystickButton(angle_joystick, 1).whileTrue(
+    new JoystickButton(angle_joystick, 2).whileTrue(
       new AbsoluteDrive(drivebase, 
         () -> deadband(-drive_joystick.getY(), 0.05), 
         () -> deadband(-drive_joystick.getX(), 0.05), 
@@ -236,6 +244,15 @@ public class RobotContainer
     new JoystickButton(drive_joystick, 5).onTrue(new InstantCommand(()-> this.x_offset = this.x_offset_left)); //this.x_offset_left
     new JoystickButton(drive_joystick, 6).onTrue(new InstantCommand(()-> this.x_offset = this.x_offset_right)); //this.x_offset_right
 
+
+    new JoystickButton(angle_joystick, 4).whileTrue(
+      new SequentialCommandGroup(
+        new InstantCommand(()->System.out.println(m_backLimelight.DDDx3_data3D[2])),
+        new InstantCommand(()->System.out.println(m_backLimelight.DDDx3_data3D[0])),
+        new InstantCommand(()->System.out.println(m_backLimelight.DDDx3_data3D[4]))
+
+      )
+    );
     // reset the gyro [angle joystick button 3]
     new JoystickButton(angle_joystick, 3).onTrue(new InstantCommand(drivebase::zeroGyro));
 
@@ -247,10 +264,10 @@ public class RobotContainer
 
     // sets auto elevator stages
     // X: level 0 Y: level 3 B: level 2  A: level 1
-    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
-    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
-    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
-    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(0)));
+    new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->this.semi_auto_el_level = 3));
+    new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->this.semi_auto_el_level = 2));
+    new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->this.semi_auto_el_level = 1));
+    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->this.semi_auto_el_level = 0));
  
 
     // ElevatorTweakout button
@@ -261,7 +278,7 @@ public class RobotContainer
         new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
         new WaitCommand(0.2),
         new InstantCommand(()-> m_Elevator.SetMotor(-0.14)),
-        new WaitCommand(0.2),
+        new WaitCommand(0.15),
         new InstantCommand(() -> m_LEDs.BaseColor())
       ));
 
@@ -269,21 +286,21 @@ public class RobotContainer
     // override auto elvelator, push it up [on operator right trigger]
     new JoystickButton(m_XboxController, 8)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
 
     // override auto elvelator, push it down [on operator left trigger]
     new JoystickButton(m_XboxController, 7)
       .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.14)))
-      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.04)));
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
     
     // suck in the coral (backwards robotbot wise) [operator left bumper]
     new JoystickButton(m_XboxController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.2)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.4)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
 
     // push out the coral [operator right bumper]
     new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.2)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.4)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
     
 

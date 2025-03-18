@@ -24,7 +24,7 @@ public class LimelightTracking extends Command {
         limelight.DDDx3_data3D[2]
       )*limelight.tv,  // this is y
           
-      ()->Math.copySign( 
+      ()->-Math.copySign( 
         Math.min(
           Math.abs((limelight.DDDx3_data3D[0]-robot_container.x_offset)*(10)),
           0.8
@@ -55,7 +55,7 @@ public class LimelightTracking extends Command {
           0.8
         ), 
         -limelight.DDDx3_data3D[2]
-        )*limelight.tv, // this is y
+        ), // this is y
           
         ()->Math.copySign( 
             Math.min(
@@ -63,15 +63,15 @@ public class LimelightTracking extends Command {
               0.8
             ), 
             limelight.DDDx3_data3D[0]
-          )*limelight.tv, // this is x
+          ), // this is x
 
         ()-> Math.copySign(
           Math.min(
-            Math.abs(limelight.DDDx3_data3D[4]*10), 
+            Math.abs(limelight.DDDx3_data3D[4]*2), 
             0.3
           ), 
-          limelight.DDDx3_data3D[4]
-        )*limelight.tv, // this is yaw
+          -limelight.DDDx3_data3D[4]
+        ), // this is yaw
 
         ()-> false // this is robot-centered
     );

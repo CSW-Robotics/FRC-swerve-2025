@@ -18,15 +18,15 @@ public class LEDs {
     private LEDPattern color;
 
     public LEDs() {
-        // connect leds to PWM port 0
-        m_led = new AddressableLED(0);
+        // connect leds to PWM port 1
+        m_led = new AddressableLED(1);
 
         // make buffer
-        m_ledBuffer = new AddressableLEDBuffer(120);
+        m_ledBuffer = new AddressableLEDBuffer(60);
         m_led.setLength(m_ledBuffer.getLength());
 
         // set color and data
-        color = LEDPattern.solid(Color.kWhite);
+        color = LEDPattern.solid(Color.kMagenta);
         color.applyTo(m_ledBuffer);
         m_led.setData(m_ledBuffer);
 
@@ -35,28 +35,28 @@ public class LEDs {
     }
 
     public void SetColor(int h, int s, int v) {
-        color = LEDPattern.solid(Color.fromHSV(h, s, v));
-        color.applyTo(m_ledBuffer);
-        m_led.setData(m_ledBuffer);
+        // color = LEDPattern.solid(Color.fromHSV(h, s, v));
+        // color.applyTo(m_ledBuffer);
+        // m_led.setData(m_ledBuffer);
     }
 
     public void SetRainbow() {
-        color = LEDPattern.rainbow(255, 128);
-        color = color.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), Meter.of(1/120));
-        color.applyTo(m_ledBuffer);
-        m_led.setData(m_ledBuffer);
+        // color = LEDPattern.rainbow(255, 128);
+        // color = color.scrollAtAbsoluteSpeed(MetersPerSecond.of(1), Meter.of(1/120));
+        // color.applyTo(m_ledBuffer);
+        // m_led.setData(m_ledBuffer);
     }
 
     public void FentLights() {
-        color = LEDPattern.solid(Color.kWhite);
-        color = color.blink(Seconds.of(0.1));
-        color.applyTo(m_ledBuffer);
-        m_led.setData(m_ledBuffer);
+        // color = LEDPattern.solid(Color.kWhite);
+        // color = color.blink(Seconds.of(0.1));
+        // color.applyTo(m_ledBuffer);
+        // m_led.setData(m_ledBuffer);
     }
 
     public void BaseColor(){
 
-        this.SetColor(0, 0, 100);
+        // this.SetColor(0, 0, 100);
 
     }
     

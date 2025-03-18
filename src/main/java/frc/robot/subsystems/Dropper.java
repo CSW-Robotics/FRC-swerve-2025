@@ -18,7 +18,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 public class Dropper extends SubsystemBase {
     
-    private SparkMax m_Dropper = new SparkMax(20, MotorType.kBrushless);
+    private SparkMax m_Dropper_Motor = new SparkMax(20, MotorType.kBrushless);
     // private DigitalInput coral_in = new DigitalInput(0);
 
     private SparkMaxConfig spark_config = new SparkMaxConfig();
@@ -29,7 +29,7 @@ public class Dropper extends SubsystemBase {
 
   public Dropper() {
     spark_config.idleMode(SparkBaseConfig.IdleMode.kBrake);
-    m_Dropper.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
+    m_Dropper_Motor.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
 
     distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
     distOnboard.setAutomaticMode(true);
@@ -50,14 +50,14 @@ public void restartAutoOutake(){
       overide_automatic_output = true;
 
     // sets motors to speed
-    m_Dropper.set(speed);
+    m_Dropper_Motor.set(speed);
     
     }
 
 
   public void periodic(){
 
-    //System.out.println(distOnboard.getRange());
+    System.out.println(distOnboard.getRange());
 
 
     if (110>distOnboard.getRange() && distOnboard.getRange()>5 && overide_automatic_output == false) {
@@ -65,7 +65,7 @@ public void restartAutoOutake(){
       // i dont think the distances on the above if statement is right
       // so i am printing out the distance sensor data, adjust as needed
 
-      setMotor(0.2);
+      m_Dropper_Motor.set(0.4);
 
       System.out.println("coral detected intaking");
 
@@ -73,10 +73,11 @@ public void restartAutoOutake(){
 
     else if (overide_automatic_output == false){
 
-      setMotor(0);
+      m_Dropper_Motor.set(0.0);
 
       System.out.println("freezing dropper motor");
     }
+
     
 
   }
