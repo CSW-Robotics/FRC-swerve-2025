@@ -30,6 +30,7 @@ import frc.robot.commands.Traversals;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
+import frc.robot.subsystems.AlgaeRemover;
 import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.IndicatorLight;
@@ -48,6 +49,7 @@ public class RobotContainer
   private final Dropper m_Dropper = new Dropper();
   private final LEDs m_LEDs = new LEDs();
   private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight, m_Dropper);
+  private final AlgaeRemover m_AlgaeRemover;
 
 
   // controllers
@@ -272,7 +274,8 @@ public class RobotContainer
       .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.4)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
     
-
+    // switches the state of the algae remover
+    new JoystickButton(m_XboxController, 10).onTrue(new InstantCommand(()->m_AlgaeRemover.SwitchState()));
 
 
 

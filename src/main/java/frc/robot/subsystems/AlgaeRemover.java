@@ -14,13 +14,43 @@ public class AlgaeRemover extends SubsystemBase {
     private SparkMax motor = new SparkMax(10, MotorType.kBrushless);
     private SparkMaxConfig motorConfig = new SparkMaxConfig();
 
+    public boolean target = false;
+
     public AlgaeRemover() {
       motorConfig.idleMode(SparkBaseConfig.IdleMode.kBrake);
       motor.configure(motorConfig, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
     }
 
-    public void SetMotor(double speed) {
-      motor.set(speed);
+    public void SwitchState() {
+
+      if (target == false){
+
+        target = true;
+
+      }
+
+      else {
+
+        target = false;
+
+      }
+    }
+
+    public void periodic(){
+
+      if (target == false){
+
+        motor.set(0.1);
+
+      }
+
+      else{
+
+        motor.set(-0.1);
+
+      }
+      
+
     }
 
     
