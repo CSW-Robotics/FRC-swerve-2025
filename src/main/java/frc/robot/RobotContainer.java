@@ -26,7 +26,6 @@ import frc.robot.commands.DieOnElevatorLevel;
 import frc.robot.commands.DieOnTag;
 import frc.robot.commands.LimelightTracking;
 import frc.robot.commands.SemiAutoCycle;
-import frc.robot.commands.Traversals;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
