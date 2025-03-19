@@ -48,7 +48,7 @@ public class RobotContainer
   private final Dropper m_Dropper = new Dropper();
   private final LEDs m_LEDs = new LEDs();
   private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight, m_Dropper);
-  private final AlgaeRemover m_AlgaeRemover;
+  private final AlgaeRemover m_AlgaeRemover = new AlgaeRemover();
 
 
   // controllers
