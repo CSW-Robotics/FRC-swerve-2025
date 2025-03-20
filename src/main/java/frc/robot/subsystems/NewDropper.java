@@ -11,7 +11,7 @@ public class NewDropper extends SubsystemBase {
     private SparkMax m_motor = new SparkMax(20, MotorType.kBrushless);
     private DutyCycleEncoder m_encoder = new DutyCycleEncoder(7);
 
-    private final double target_motor_velocity = 1; // in rpm
+    private final double target_motor_velocity = 60; // in rpm
     private final double min_motor_power = 0.2; // in %
     private final double kP = 0.4;
 
