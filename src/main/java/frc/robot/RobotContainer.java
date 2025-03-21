@@ -52,6 +52,7 @@ public class RobotContainer
   public XboxController m_XboxController = new XboxController(2);
   public Joystick drive_joystick = new Joystick(1);
   public Joystick angle_joystick = new Joystick(0);
+  public XboxController BackupController = new XboxController(3);
 
   // auto picker
   private static final String default_auto = "Test Auto";
@@ -149,7 +150,9 @@ public class RobotContainer
 
     // tracks to front, places anywhere on reef (not level 1)
     NamedCommands.registerCommand("TrackFrontAndScore", 
-    SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this)
+    new SequentialCommandGroup(
+      SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this),
+      new InstantCommand (()-> m_Elevator.ChangeTargetStage(0)))
     );
 
 
@@ -176,9 +179,11 @@ public class RobotContainer
     );
 
     // Score the coral we have in our robot
-    new JoystickButton(drive_joystick, 3).whileTrue(
-      SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this)
-    );
+    new JoystickButton(drive_joystick, 3)
+    .whileTrue(SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this))
+    .onFalse(new SequentialCommandGroup(
+    new InstantCommand(()-> m_Dropper.restartAutoOutake()),
+    new InstantCommand (()-> m_Elevator.ChangeTargetStage(0))));
 
 
 
@@ -236,9 +241,15 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->this.semi_auto_el_level = 3));
     new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->this.semi_auto_el_level = 2));
     new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->this.semi_auto_el_level = 1));
-    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->m_Dropper.intakeCoral(0.6)));
+
+
+    new JoystickButton(m_XboxController, 10)
+    .onTrue(new InstantCommand(()->m_Dropper.intakeCoral(0.6)))
+    .onFalse(new InstantCommand(()-> new SequentialCommandGroup( 
+      new InstantCommand (()->m_Dropper.restartAutoOutake()),
+      new InstantCommand (()->m_Dropper.should_intake = false))));
     
-    new JoystickButton(m_XboxController, 10).onTrue(new SequentialCommandGroup(
+    new JoystickButton(m_XboxController, 1).onTrue(new SequentialCommandGroup(
       
     new InstantCommand(()-> m_Dropper.should_intake = false),
       new InstantCommand(()-> m_Dropper.restartAutoOutake()),
@@ -259,23 +270,73 @@ public class RobotContainer
 
     // override auto elvelator, push it up [on operator right trigger]
     new JoystickButton(m_XboxController, 8)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.2)))
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.4)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
 
     // override auto elvelator, push it down [on operator left trigger]
     new JoystickButton(m_XboxController, 7)
-      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.14)))
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.28)))
       .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
     
     // suck in the coral (backwards robotbot wise) [operator left bumper]
     new JoystickButton(m_XboxController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.4)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.3)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
 
     // push out the coral [operator right bumper]
     new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.4)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
+
+
+  
+  // BACKUP controls
+
+    // sets auto elevator stages
+    // X: level 0 Y: level 3 B: level 2  A: level 1
+    new JoystickButton(BackupController, 4).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(3)));
+    new JoystickButton(BackupController, 3).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(2)));
+    new JoystickButton(BackupController, 2).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(1)));
+    new JoystickButton(BackupController, 1).onTrue(new InstantCommand(()->m_Elevator.ChangeTargetStage(0)));
+    
+    new JoystickButton(BackupController, 10).onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> m_Dropper.should_intake = false),
+      new InstantCommand(()-> m_Dropper.restartAutoOutake()),
+      new InstantCommand(()-> m_Elevator.ChangeTargetStage(0))
+
+    ));
+
+    // ElevatorTweakout button
+    new JoystickButton(BackupController, 9).onTrue(
+      
+      new SequentialCommandGroup(
+        new InstantCommand(()-> m_LEDs.FentLights()),
+        new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
+        new WaitCommand(0.2),
+        new InstantCommand(()-> m_Elevator.SetMotor(-0.14))
+      ));
+
+
+    // override auto elvelator, push it up [on operator right trigger]
+    new JoystickButton(BackupController, 8)
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(0.4)))
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
+
+    // override auto elvelator, push it down [on operator left trigger]
+    new JoystickButton(BackupController, 7)
+      .onTrue(new InstantCommand(()-> m_Elevator.SetMotor(-0.28)))
+      .onFalse(new InstantCommand(()-> m_Elevator.SetMotor(0.02)));
+    
+    // suck in the coral (backwards robotbot wise) [operator left bumper]
+    new JoystickButton(BackupController, 5)
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.3)))
+      .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
+
+    // push out the coral [operator right bumper]
+    new JoystickButton(BackupController, 6)
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
+      .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
+
 
 
 

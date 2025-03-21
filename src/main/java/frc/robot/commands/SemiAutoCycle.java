@@ -27,8 +27,7 @@ public class SemiAutoCycle extends Command {
                 new DieOnElevatorLevel(m_Elevator, m_RobotContainer),
                 new InstantCommand (()->m_Dropper.setMotor(0.4)),
                 new WaitCommand(0.5),
-                new InstantCommand (()->m_Dropper.setMotor(0.0)),
-                new InstantCommand (()-> m_Elevator.ChangeTargetStage(0))
+                new InstantCommand (()->m_Dropper.setMotor(0.0))
           )));
     }
 
@@ -44,7 +43,7 @@ public class SemiAutoCycle extends Command {
               new WaitCommand(0.1),
               new InstantCommand(()-> m_Dropper.restartAutoOutake()),
               new WaitCommand(0.1),
-              new InstantCommand(()-> m_Dropper.intakeCoral(0.5)),
+              new InstantCommand(()-> m_Dropper.intakeCoral(0.65)),
               new DieOnIntaken(m_Dropper)
             )
           ));

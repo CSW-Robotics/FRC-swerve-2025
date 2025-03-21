@@ -73,7 +73,6 @@ public void restartAutoOutake(){
 
     }
 
-    System.out.println(delta);
     double target = 0.8;
 
     if (should_intake == true && overide_automatic_output == false && delta < target){
