@@ -11,17 +11,12 @@ Driver:
 
 Opperater:
 
-    The i trigger moves the elevator down 
+    The left trigger moves the elevator down 
     The right trigger moves the elevator up
-    Button 9 (BACK) opens the solonoids like during auto
+    Button 9 (BACK) is the auto shimy for stuck coral
     The right bumper pushes the coral out
     The left bumper pulls the coral in
-    Button 4 (yellow Y) sets the target stage to 3
-    Button 3 (red B) sets the target stage to 2
-    Button 2 (green A) sets the target stage to 1
+    Button 4 (yellow Y) sets the target stage to 3 for next semi-auto
+    Button 3 (red B) sets the target stage to 2 for next semi-auto
+    Button 2 (green A) sets the target stage to 1 for next semi-auto
     Button 1 (blue X) sets the target stage to the bottem for coral intake
-
-                                        **IMPORTANT**
-    The Y, B, X, and A buttons restart the automatic movement of the elevator when you press them
-
-    The BACK button opens the solonoids for 3 seconds you cannot interupt it

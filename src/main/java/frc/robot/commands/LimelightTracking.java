@@ -67,10 +67,10 @@ public class LimelightTracking extends Command {
 
         ()-> Math.copySign(
           Math.min(
-            Math.abs(limelight.DDDx3_data3D[4]*2), 
+            Math.abs((limelight.DDDx3_data3D[4]+2)*2), 
             0.3
           ), 
-          -limelight.DDDx3_data3D[4]
+          -(limelight.DDDx3_data3D[4]+2)
         ), // this is yaw
 
         ()-> false // this is robot-centered

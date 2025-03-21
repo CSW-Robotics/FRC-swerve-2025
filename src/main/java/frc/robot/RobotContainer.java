@@ -23,13 +23,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DieOnDoneTracking;
 import frc.robot.commands.DieOnElevatorLevel;
-import frc.robot.commands.DieOnTag;
 import frc.robot.commands.LimelightTracking;
 import frc.robot.commands.SemiAutoCycle;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDrive;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
-import frc.robot.subsystems.AlgaeRemover;
 import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.IndicatorLight;
@@ -48,7 +46,6 @@ public class RobotContainer
   private final Dropper m_Dropper = new Dropper();
   private final LEDs m_LEDs = new LEDs();
   private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight, m_Dropper);
-  private final AlgaeRemover m_AlgaeRemover = new AlgaeRemover();
 
 
   // controllers
@@ -146,12 +143,12 @@ public class RobotContainer
     NamedCommands.registerCommand("TargetLevel4", new InstantCommand(()-> this.semi_auto_el_level = 3));
 
     // back limelight tracking
-    NamedCommands.registerCommand("LimelightTrackingBack", 
+    NamedCommands.registerCommand("TrackBackAndIntake", 
     SemiAutoCycle.GetCoral(drivebase, m_backLimelight, m_Dropper)
     );
 
     // tracks to front, places anywhere on reef (not level 1)
-    NamedCommands.registerCommand("LimelightTrackingFront", 
+    NamedCommands.registerCommand("TrackFrontAndScore", 
     SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this)
     );
 
@@ -174,12 +171,12 @@ public class RobotContainer
 
 
     // Get coral from the coral station
-    new JoystickButton(drive_joystick, 3).whileTrue(
+    new JoystickButton(drive_joystick, 4).whileTrue(
       SemiAutoCycle.GetCoral(drivebase, m_backLimelight, m_Dropper)
     );
 
     // Score the coral we have in our robot
-    new JoystickButton(drive_joystick, 4).whileTrue(
+    new JoystickButton(drive_joystick, 3).whileTrue(
       SemiAutoCycle.ScoreCoral(drivebase, m_frontLimelight, m_Elevator, m_Dropper, this)
     );
 
@@ -239,8 +236,15 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 4).onTrue(new InstantCommand(()->this.semi_auto_el_level = 3));
     new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->this.semi_auto_el_level = 2));
     new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->this.semi_auto_el_level = 1));
-    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->this.semi_auto_el_level = 0));
- 
+    new JoystickButton(m_XboxController, 1).onTrue(new InstantCommand(()->m_Dropper.intakeCoral(0.6)));
+    
+    new JoystickButton(m_XboxController, 10).onTrue(new SequentialCommandGroup(
+      
+    new InstantCommand(()-> m_Dropper.should_intake = false),
+      new InstantCommand(()-> m_Dropper.restartAutoOutake()),
+      new InstantCommand(()-> m_Elevator.ChangeTargetStage(0))
+
+    ));
 
     // ElevatorTweakout button
     new JoystickButton(m_XboxController, 9).onTrue(
@@ -272,9 +276,6 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 6)
       .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.4)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
-    
-    // switches the state of the algae remover
-    new JoystickButton(m_XboxController, 10).onTrue(new InstantCommand(()->m_AlgaeRemover.SwitchState()));
 
 
 

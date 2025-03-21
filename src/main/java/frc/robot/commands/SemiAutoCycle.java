@@ -24,7 +24,7 @@ public class SemiAutoCycle extends Command {
               new SequentialCommandGroup(
                 new DieOnDoneTracking(m_frontLimelight, 0.65),
                 new InstantCommand (()-> m_Elevator.ChangeTargetStage(m_RobotContainer.semi_auto_el_level)),
-                new DieOnElevatorLevel(m_Elevator, m_RobotContainer.semi_auto_el_level),
+                new DieOnElevatorLevel(m_Elevator, m_RobotContainer),
                 new InstantCommand (()->m_Dropper.setMotor(0.4)),
                 new WaitCommand(0.5),
                 new InstantCommand (()->m_Dropper.setMotor(0.0)),
@@ -39,9 +39,13 @@ public class SemiAutoCycle extends Command {
             LimelightTracking.Back(drivebase, m_backLimelight),
             
             new SequentialCommandGroup(
-              new DieOnDoneTracking(m_backLimelight, 0.63),
-              new DieOnCoralIn(m_Dropper),
-              new DieOnCoralIntaken(m_Dropper)
+              //new DieOnDoneTracking(m_backLimelight, 0.9),
+              new InstantCommand(()-> m_Dropper.setMotor(0.1)),
+              new WaitCommand(0.1),
+              new InstantCommand(()-> m_Dropper.restartAutoOutake()),
+              new WaitCommand(0.1),
+              new InstantCommand(()-> m_Dropper.intakeCoral(0.5)),
+              new DieOnIntaken(m_Dropper)
             )
           ));
 

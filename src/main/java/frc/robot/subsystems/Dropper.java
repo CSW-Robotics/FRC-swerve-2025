@@ -6,6 +6,8 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,61 +25,71 @@ public class Dropper extends SubsystemBase {
 
     private SparkMaxConfig spark_config = new SparkMaxConfig();
 
-    public Rev2mDistanceSensor distOnboard;  
-    
+    private DutyCycleEncoder m_Encoder = new DutyCycleEncoder(7);
+
     private boolean overide_automatic_output = false;
+
+    public boolean should_intake = false;
+
+    private double start_pos = m_Encoder.get();
+
+    private double outake_speed = 0.37;
 
   public Dropper() {
     spark_config.idleMode(SparkBaseConfig.IdleMode.kBrake);
     m_Dropper_Motor.configure(spark_config, SparkBase.ResetMode.kResetSafeParameters, SparkBase.PersistMode.kPersistParameters);
-
-    distOnboard = new Rev2mDistanceSensor(Port.kOnboard);
-    distOnboard.setAutomaticMode(true);
-    distOnboard.setDistanceUnits(Unit.kMillimeters);
   }
+
 public void restartAutoOutake(){
-
-  setMotor(0);
-
   overide_automatic_output = false;
+  m_Dropper_Motor.set(0);
 
 }
 
  
 //set the motor speed
   public void setMotor(double speed) {
-
-      overide_automatic_output = true;
-
+    overide_automatic_output = true;
     // sets motors to speed
     m_Dropper_Motor.set(speed);
     
     }
 
+  public void intakeCoral(double speed){
+
+    outake_speed = speed;
+    should_intake = true;
+    start_pos = m_Encoder.get();
+
+  }
+
 
   public void periodic(){
 
-    System.out.println(distOnboard.getRange());
+    double delta = (m_Encoder.get() - start_pos)*-1;
 
-
-    if (110>distOnboard.getRange() && distOnboard.getRange()>5 && overide_automatic_output == false) {
-
-      // i dont think the distances on the above if statement is right
-      // so i am printing out the distance sensor data, adjust as needed
-
-      m_Dropper_Motor.set(0.4);
-
-      System.out.println("coral detected intaking");
+    if (delta < -0.05){
+      delta += 1.0;
 
     }
 
-    else if (overide_automatic_output == false){
+    System.out.println(delta);
+    double target = 0.8;
 
+    if (should_intake == true && overide_automatic_output == false && delta < target){
+
+      double error = target - delta;
+      
+      m_Dropper_Motor.set(Math.max((outake_speed*0.4*error), 0.25));
+
+    }
+
+    else if (should_intake == true && overide_automatic_output == false && delta >= target) {
+
+      should_intake = false;
       m_Dropper_Motor.set(0.0);
 
-      System.out.println("freezing dropper motor");
     }
-
     
 
   }
