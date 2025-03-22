@@ -18,7 +18,7 @@ public class LimelightTracking extends Command {
       ()-> Math.copySign(
         Math.min(
           // its okay, the environments fine
-          Math.abs((limelight.DDDx3_data3D[2]-0.1)), 
+          Math.abs((limelight.DDDx3_data3D[2]-0.15)), 
           0.8
         ), 
         limelight.DDDx3_data3D[2]
@@ -51,7 +51,7 @@ public class LimelightTracking extends Command {
 
       ()-> Math.copySign(
         Math.min(
-          Math.abs((limelight.DDDx3_data3D[2]-0.1)), 
+          Math.abs((limelight.DDDx3_data3D[2]-0.1)*1.1), 
           0.8
         ), 
         -limelight.DDDx3_data3D[2]

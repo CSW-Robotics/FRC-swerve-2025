@@ -13,7 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "LimelightTrackingFront"
+            "name": "TargetLevel4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TrackFrontAndScore"
           }
         }
       ]

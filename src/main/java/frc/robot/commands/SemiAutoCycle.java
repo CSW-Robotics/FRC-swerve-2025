@@ -25,7 +25,7 @@ public class SemiAutoCycle extends Command {
                 new DieOnDoneTracking(m_frontLimelight, 0.65),
                 new InstantCommand (()-> m_Elevator.ChangeTargetStage(m_RobotContainer.semi_auto_el_level)),
                 new DieOnElevatorLevel(m_Elevator, m_RobotContainer),
-                new InstantCommand (()->m_Dropper.setMotor(0.4)),
+                new InstantCommand (()->m_Dropper.setMotor(0.25)),
                 new WaitCommand(0.5),
                 new InstantCommand (()->m_Dropper.setMotor(0.0))
           )));
@@ -33,20 +33,18 @@ public class SemiAutoCycle extends Command {
 
     public static Command GetCoral(SwerveSubsystem drivebase, LimeLight m_backLimelight, Dropper m_Dropper){
 
-        return new SequentialCommandGroup(
-          new ParallelRaceGroup(
-            LimelightTracking.Back(drivebase, m_backLimelight),
+        return LimelightTracking.Back(drivebase, m_backLimelight);
             
-            new SequentialCommandGroup(
-              //new DieOnDoneTracking(m_backLimelight, 0.9),
-              new InstantCommand(()-> m_Dropper.setMotor(0.1)),
-              new WaitCommand(0.1),
-              new InstantCommand(()-> m_Dropper.restartAutoOutake()),
-              new WaitCommand(0.1),
-              new InstantCommand(()-> m_Dropper.intakeCoral(0.65)),
-              new DieOnIntaken(m_Dropper)
-            )
-          ));
+            // new SequentialCommandGroup(
+            //   //new DieOnDoneTracking(m_backLimelight, 0.9),
+            //   new InstantCommand(()-> m_Dropper.setMotor(0.1)),
+            //   new WaitCommand(0.1),
+            //   new InstantCommand(()-> m_Dropper.restartAutoOutake()),
+            //   new WaitCommand(0.1),
+            //   new InstantCommand(()-> m_Dropper.intakeCoral(0.65)),
+            //   new DieOnIntaken(m_Dropper)
+            // )
+          
 
     }
 

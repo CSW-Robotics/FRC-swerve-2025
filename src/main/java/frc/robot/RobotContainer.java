@@ -39,7 +39,7 @@ import java.io.File;
 public class RobotContainer
 {
   // subsystems
-  private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
+  public final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(), "swerve/neo"));
   private final LimeLight  m_frontLimelight = new LimeLight("limelight");
   private final LimeLight     m_backLimelight = new LimeLight("limelight-front");
   private final Elevator m_Elevator = new Elevator();
@@ -55,18 +55,14 @@ public class RobotContainer
   public XboxController BackupController = new XboxController(3);
 
   // auto picker
-  private static final String default_auto = "Test Auto";
   private final SendableChooser<String> m_auto_chooser = new SendableChooser<>();
   
   // x offests of the auto tracking
-  public double x_offset_left =  0.13;
+  public double x_offset_left =  0.15;
   public double x_offset_right = -0.175;
   public double x_offset = x_offset_right;
 
   public int semi_auto_el_level = 1;
-
-  // SemiAuto Elevator Level Chooser for SD
-  private final SendableChooser<Integer> auto_elevator_level_chooser = new SendableChooser<>();
   
  
   /**
@@ -95,20 +91,8 @@ public class RobotContainer
       }
     }
     // put it on SmartDashboard
-    m_auto_chooser.setDefaultOption("Test Auto", default_auto);
+    m_auto_chooser.setDefaultOption("Middle Start", "Middle Start");
     SmartDashboard.putData("Auto Chooser Mk4", m_auto_chooser);
-
-
-
-
-  // ##### SEMIAUTO LEVEL PICKER ON SD ####
-
-    auto_elevator_level_chooser.setDefaultOption("Level 2", 1);
-    auto_elevator_level_chooser.addOption("Level 3", 2);
-    auto_elevator_level_chooser.addOption("Level 4", 3);
-    SmartDashboard.putData("SemiAuto Elevator Level Chooser", auto_elevator_level_chooser);
-
-
 
   
 
@@ -280,12 +264,12 @@ public class RobotContainer
     
     // suck in the coral (backwards robotbot wise) [operator left bumper]
     new JoystickButton(m_XboxController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.3)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.25)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
 
     // push out the coral [operator right bumper]
     new JoystickButton(m_XboxController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.25)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
 
 
@@ -329,12 +313,12 @@ public class RobotContainer
     
     // suck in the coral (backwards robotbot wise) [operator left bumper]
     new JoystickButton(BackupController, 5)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.3)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(-0.25)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
 
     // push out the coral [operator right bumper]
     new JoystickButton(BackupController, 6)
-      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.3)))
+      .whileTrue(new InstantCommand(()-> m_Dropper.setMotor(0.25)))
       .onFalse(new InstantCommand(()-> m_Dropper.restartAutoOutake()));
 
 

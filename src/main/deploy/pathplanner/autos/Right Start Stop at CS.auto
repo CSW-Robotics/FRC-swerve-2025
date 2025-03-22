@@ -5,27 +5,33 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "PushOut Path-back"
+            "name": "TargetLevel4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "PushOut Path-front"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Start-from push"
+            "pathName": "Right Start"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "LimelightTrackingFront"
+            "name": "TrackFrontAndScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "goto Coral station"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "TrackBackAndIntake"
           }
         }
       ]
