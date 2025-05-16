@@ -8,10 +8,16 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.Led1OffColorValue;
 import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,7 +36,6 @@ import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.commands.swervedrive.drivebase.TeleopDrive;
 import frc.robot.subsystems.Dropper;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.IndicatorLight;
 import frc.robot.subsystems.LimeLight;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -44,8 +49,6 @@ public class RobotContainer
   private final LimeLight     m_backLimelight = new LimeLight("limelight-front");
   private final Elevator m_Elevator = new Elevator();
   private final Dropper m_Dropper = new Dropper();
-  private final LEDs m_LEDs = new LEDs();
-  private final IndicatorLight m_IndicatorLight = new IndicatorLight(m_LEDs, m_Elevator, m_backLimelight, m_Dropper);
 
 
   // controllers
@@ -63,6 +66,12 @@ public class RobotContainer
   public double x_offset = x_offset_right;
 
   public int semi_auto_el_level = 1;
+
+  public Field2d current_field = new Field2d();
+
+  public Pose2d current_pos = new Pose2d();
+
+
   
  
   /**
@@ -112,8 +121,6 @@ public class RobotContainer
 
 
   private void configureBindings() {
-
-
 
   // ##### NAMED COMMANDS FOR PATHPLANNER #####
 
@@ -226,12 +233,6 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 3).onTrue(new InstantCommand(()->this.semi_auto_el_level = 2));
     new JoystickButton(m_XboxController, 2).onTrue(new InstantCommand(()->this.semi_auto_el_level = 1));
 
-
-    new JoystickButton(m_XboxController, 10)
-    .onTrue(new InstantCommand(()->m_Dropper.intakeCoral(0.6)))
-    .onFalse(new InstantCommand(()-> new SequentialCommandGroup( 
-      new InstantCommand (()->m_Dropper.restartAutoOutake()),
-      new InstantCommand (()->m_Dropper.should_intake = false))));
     
     new JoystickButton(m_XboxController, 1).onTrue(new SequentialCommandGroup(
       
@@ -245,7 +246,6 @@ public class RobotContainer
     new JoystickButton(m_XboxController, 9).onTrue(
       
       new SequentialCommandGroup(
-        new InstantCommand(()-> m_LEDs.FentLights()),
         new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
         new WaitCommand(0.2),
         new InstantCommand(()-> m_Elevator.SetMotor(-0.14))
@@ -294,7 +294,6 @@ public class RobotContainer
     new JoystickButton(BackupController, 9).onTrue(
       
       new SequentialCommandGroup(
-        new InstantCommand(()-> m_LEDs.FentLights()),
         new InstantCommand(()-> m_Elevator.SetMotor(0.2)),
         new WaitCommand(0.2),
         new InstantCommand(()-> m_Elevator.SetMotor(-0.14))
@@ -336,5 +335,22 @@ public class RobotContainer
 
   public void setDriveMode() { configureBindings(); }
   public void setMotorBrake(boolean brake) { drivebase.setMotorBrake(brake);}
+
+
+
+
+  public void periodic(){
+    
+    Rotation2d m_rotation = new Rotation2d(m_backLimelight.Pos_data[5]);
+
+    Pose2d m_pos2d = new Pose2d(m_backLimelight.Pos_data[0],m_backLimelight.Pos_data[2],m_rotation);
+
+    current_field.setRobotPose(m_pos2d);
+
+    SmartDashboard.putData(current_field);
+
+    
+
+  }
 }
 

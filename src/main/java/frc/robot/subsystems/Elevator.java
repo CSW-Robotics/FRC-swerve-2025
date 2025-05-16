@@ -107,7 +107,7 @@ public class Elevator extends SubsystemBase {
                 return 1; // Go up
             }
             else{
-                return 0.08; //stay in place 
+                return 0.03; //stay in place 
             }
     }
     
@@ -116,7 +116,7 @@ public class Elevator extends SubsystemBase {
             
             if (ShouldMoveAutomatically == true) {
 
-                double motorSpeed = Math.max((0.5*(0.5*Math.abs(currentStage-targetStage))), 0.4)*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
+                double motorSpeed = Math.max((0.5*(0.5*Math.abs(currentStage-targetStage))), 1.0)*Direction(); // store constant speed in appropriate direction, avoiding a difference in motor speeds
 
                 motor1.set(motorSpeed);
                 motor2.set(motorSpeed);
